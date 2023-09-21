@@ -1,0 +1,7 @@
+query foo {
+    opentofu {
+        run(run: "test") {
+            stdout
+        }
+    }
+}

@@ -3690,14 +3690,9 @@ func main() {
 
 func invoke(ctx context.Context, parentJSON []byte, parentName string, fnName string, inputArgs map[string][]byte) (any, error) {
 	switch parentName {
-	case "Container":
-		switch fnName {
-		default:
-			return nil, fmt.Errorf("unknown function %s", fnName)
-		}
 	case "Opentofu":
 		switch fnName {
-		case "MyFunction":
+		case "HelloWorld":
 			var err error
 			var parent Opentofu
 			err = json.Unmarshal(parentJSON, &parent)
@@ -3705,16 +3700,25 @@ func invoke(ctx context.Context, parentJSON []byte, parentName string, fnName st
 				fmt.Println(err.Error())
 				os.Exit(2)
 			}
-			var stringArg string
-			err = json.Unmarshal([]byte(inputArgs["stringArg"]), &stringArg)
+			return (*Opentofu).HelloWorld(&parent, ctx)
+		case "Run":
+			var err error
+			var parent Opentofu
+			err = json.Unmarshal(parentJSON, &parent)
 			if err != nil {
 				fmt.Println(err.Error())
 				os.Exit(2)
 			}
-			return (*Opentofu).MyFunction(&parent, ctx, stringArg)
+			var command string
+			err = json.Unmarshal([]byte(inputArgs["command"]), &command)
+			if err != nil {
+				fmt.Println(err.Error())
+				os.Exit(2)
+			}
+			return (*Opentofu).Run(&parent, ctx, command)
 		case "":
 			var err error
-			var typeDefBytes []byte = []byte("{\"asObject\":{\"functions\":[{\"args\":[{\"name\":\"stringArg\",\"typeDef\":{\"kind\":\"StringKind\"}}],\"name\":\"MyFunction\",\"returnType\":{\"asObject\":{\"name\":\"Container\"},\"kind\":\"ObjectKind\"}}],\"name\":\"Opentofu\"},\"kind\":\"ObjectKind\"}")
+			var typeDefBytes []byte = []byte("{\"asObject\":{\"fields\":[{\"name\":\"Ctr\",\"typeDef\":{\"asObject\":{\"name\":\"Container\"},\"kind\":\"ObjectKind\"}}],\"functions\":[{\"name\":\"HelloWorld\",\"returnType\":{\"kind\":\"StringKind\"}},{\"args\":[{\"name\":\"command\",\"typeDef\":{\"kind\":\"StringKind\"}}],\"name\":\"Run\",\"returnType\":{\"asObject\":{\"name\":\"Container\"},\"kind\":\"ObjectKind\"}}],\"name\":\"Opentofu\"},\"kind\":\"ObjectKind\"}")
 			var typeDef TypeDefInput
 			err = json.Unmarshal(typeDefBytes, &typeDef)
 			if err != nil {
@@ -3726,6 +3730,11 @@ func invoke(ctx context.Context, parentJSON []byte, parentName string, fnName st
 				mod = mod.WithFunction(dag.NewFunction(fnDef))
 			}
 			return mod, nil
+		default:
+			return nil, fmt.Errorf("unknown function %s", fnName)
+		}
+	case "Container":
+		switch fnName {
 		default:
 			return nil, fmt.Errorf("unknown function %s", fnName)
 		}
