@@ -1,4 +1,4 @@
-module opentofu
+module OpenTofu
 
 go 1.21.1
 

@@ -13,7 +13,7 @@ import (
 
 	"github.com/Khan/genqlient/graphql"
 
-	"opentofu/querybuilder"
+	"OpenTofu/querybuilder"
 )
 
 // A global cache volume identifier.
@@ -3690,35 +3690,26 @@ func main() {
 
 func invoke(ctx context.Context, parentJSON []byte, parentName string, fnName string, inputArgs map[string][]byte) (any, error) {
 	switch parentName {
-	case "Opentofu":
+	case "OpenTofu":
 		switch fnName {
-		case "HelloWorld":
+		case "MyFunction":
 			var err error
-			var parent Opentofu
+			var parent OpenTofu
 			err = json.Unmarshal(parentJSON, &parent)
 			if err != nil {
 				fmt.Println(err.Error())
 				os.Exit(2)
 			}
-			return (*Opentofu).HelloWorld(&parent, ctx)
-		case "Run":
-			var err error
-			var parent Opentofu
-			err = json.Unmarshal(parentJSON, &parent)
+			var stringArg string
+			err = json.Unmarshal([]byte(inputArgs["stringArg"]), &stringArg)
 			if err != nil {
 				fmt.Println(err.Error())
 				os.Exit(2)
 			}
-			var command string
-			err = json.Unmarshal([]byte(inputArgs["command"]), &command)
-			if err != nil {
-				fmt.Println(err.Error())
-				os.Exit(2)
-			}
-			return (*Opentofu).Run(&parent, ctx, command)
+			return (*OpenTofu).MyFunction(&parent, ctx, stringArg)
 		case "":
 			var err error
-			var typeDefBytes []byte = []byte("{\"asObject\":{\"fields\":[{\"name\":\"Ctr\",\"typeDef\":{\"asObject\":{\"name\":\"Container\"},\"kind\":\"ObjectKind\"}}],\"functions\":[{\"name\":\"HelloWorld\",\"returnType\":{\"kind\":\"StringKind\"}},{\"args\":[{\"name\":\"command\",\"typeDef\":{\"kind\":\"StringKind\"}}],\"name\":\"Run\",\"returnType\":{\"asObject\":{\"name\":\"Container\"},\"kind\":\"ObjectKind\"}}],\"name\":\"Opentofu\"},\"kind\":\"ObjectKind\"}")
+			var typeDefBytes []byte = []byte("{\"asObject\":{\"functions\":[{\"args\":[{\"name\":\"stringArg\",\"typeDef\":{\"kind\":\"StringKind\"}}],\"name\":\"MyFunction\",\"returnType\":{\"asObject\":{\"name\":\"Container\"},\"kind\":\"ObjectKind\"}}],\"name\":\"OpenTofu\"},\"kind\":\"ObjectKind\"}")
 			var typeDef TypeDefInput
 			err = json.Unmarshal(typeDefBytes, &typeDef)
 			if err != nil {
