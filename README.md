@@ -1,2 +1,2 @@
 # daggerverse
-Personal Collection of Dagger Modules 
+Personal Collection of Dagger Modules
