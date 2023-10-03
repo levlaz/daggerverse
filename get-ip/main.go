@@ -54,7 +54,6 @@ func (m *GetIp) RunEnv(env string) *Container {
 
 	return m.Ctr.
 		WithEnvVariable("CACHEBUSTER", time.Now().String()).
-		WithExec([]string{"sleep", "5"}).
 		WithExec([]string{"echo", affirmation}).
 		WithExec([]string{"dig", "+short", "myip.opendns.com", "@resolver1.opendns.com"})
 }
