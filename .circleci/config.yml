@@ -1,0 +1,15 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/go:1.17
+    resource_class: medium
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.14
+          docker_layer_caching: true
+
+      - run: cd /usr/local/bin && { sudo curl -L https://github.com/jpadams/shykes-dagger-zenith-builder/releases/download/nightly/dagger-zenith-linux-amd64 -o dagger; sudo chmod +x dagger; cd -; }
+      - run: cd get-ip && echo '{getIp{run{stdout}}}' | dagger query --progress=plain
