@@ -36,6 +36,9 @@ func (m *GetIp) RunEnv(env string) *Container {
 	is_ci := strings.Contains(env, "CIRCLECI")
 	if is_ci == true {
 		affirmation = `
+
+
+		
 		You deserve better than this 1000 line YAML file.
 		You deserve better than waiting 12 minutes for a git clone.
 		You deserve better than juggling orbs and running in circles.
@@ -49,6 +52,9 @@ func (m *GetIp) RunEnv(env string) *Container {
 		██║░░██║██╔══██║██║░░╚██╗██║░░╚██╗██╔══╝░░██╔══██╗░░░██║██║░░██║
 		██████╔╝██║░░██║╚██████╔╝╚██████╔╝███████╗██║░░██║██╗██║╚█████╔╝
 		╚═════╝░╚═╝░░╚═╝░╚═════╝░░╚═════╝░╚══════╝╚═╝░░╚═╝╚═╝╚═╝░╚════╝░
+
+
+
 		`
 	}
 
