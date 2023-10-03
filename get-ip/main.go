@@ -15,6 +15,7 @@ func (m *GetIp) initBaseContainer() {
 	}
 }
 
+// Get IP Address of Current Container
 func (m *GetIp) Run() *Container {
 	m.initBaseContainer()
 	return m.Ctr.
