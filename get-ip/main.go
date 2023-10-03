@@ -38,7 +38,7 @@ func (m *GetIp) RunEnv(env string) *Container {
 		affirmation = `
 		You deserve better than this 1000 line YAML file.
 		You deserve better than waiting 12 minutes for a git clone.
-		You deserve better than debugging in-line bash scripts.
+		You deserve better than juggling orbs and running in circles.
 		You deserve better. 
 
 		Don't worry, help is on the way.
@@ -50,7 +50,7 @@ func (m *GetIp) RunEnv(env string) *Container {
 		██████╔╝██║░░██║╚██████╔╝╚██████╔╝███████╗██║░░██║██╗██║╚█████╔╝
 		╚═════╝░╚═╝░░╚═╝░╚═════╝░░╚═════╝░╚══════╝╚═╝░░╚═╝╚═╝╚═╝░╚════╝░
 
-		Break free of your spherical prison, dump your orbs and slice your build time in half. https://discord.gg/dagger-io
+		Slice your build time in half. 
 		`
 	}
 
