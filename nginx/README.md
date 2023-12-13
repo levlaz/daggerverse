@@ -7,5 +7,5 @@ Serve static directory with ngingx
 ### Find Code References
 
 ```sh
-dagger up --port 8080:80 serve --directory .
+dagger up --port 8080:80 -m github.com/levlaz/daggerverse/nginx serve --directory .
 ```
