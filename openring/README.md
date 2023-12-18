@@ -1,6 +1,6 @@
 # Openring 
 
-Generate webring from RSS feeds using [openring](https://git.sr.ht/~sircmpwn/openring/tree/master/item/README.md). Useful for use with a static site generator.
+Generate webring from RSS feeds using [openring](https://git.sr.ht/~sircmpwn/openring). Useful for use with a static site generator.
 
 ## Input File Requirements
 `sources.txt` should be a file with a list of rss feeds, one per line. 
