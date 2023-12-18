@@ -17,7 +17,7 @@ https://rknight.me/feed.xml
 ## Usage Example 
 ```bash
 dagger export --output=out.html \
-    -m openring openring \
+    -m github.com/levlaz/daggerverse/openring openring \
     --sources=sources.txt 
 ```
 
