@@ -13,6 +13,9 @@ func (m *Openring) initBaseContainer() {
 		m.Ctr = dag.
 			Container().
 			From("golang:alpine").
+			WithMountedCache("/go/pkg/mod", dag.CacheVolume("openring-go-mod")).
+			WithMountedCache("/go/build-cache", dag.CacheVolume("openring-go-build")).
+			WithEnvVariable("GOCACHE", "/go/build-cache").
 			WithExec([]string{"apk", "add", "git"}).
 			WithExec([]string{"apk", "add", "tree"}).
 			WithExec([]string{"git", "clone", "https://git.sr.ht/~sircmpwn/openring"}).
