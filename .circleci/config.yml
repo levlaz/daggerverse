@@ -15,6 +15,11 @@ jobs:
           name: Install Dagger CLI
           command: cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sudo sh; cd -; }
       - run: 
+          command: env 
+      - run:
+          name: show dagger version 
+          command: dagger version
+      - run: 
           name: get-ip smoke test 
           command: dagger call --progress=plain -m get-ip run
       - run:
