@@ -14,8 +14,7 @@ jobs:
       - run: cd /usr/local/bin && { sudo curl -L https://github.com/jpadams/shykes-dagger-zenith-builder/releases/download/nightly/dagger-zenith-linux-amd64 -o dagger; sudo chmod +x dagger; cd -; }
       - run: 
           name: get-ip smoke test 
-          command: dagger call -m get-ip run
-      - run: cd get-ip && echo "{getIp{runEnv(env:\"$(env | tr -d "\n")\"){stdout}}}" | dagger query --progress=plain
+          command: dagger call --progress=plain -m get-ip run
       - run:
           name: Stop Dagger Engine
           command: docker stop -t 300 $(docker ps --filter name="dagger-engine-*" -q)
