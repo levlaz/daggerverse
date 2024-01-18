@@ -1,4 +1,4 @@
-module main
+module mariadb
 
 go 1.21.3
 
