@@ -1,12 +1,22 @@
 package main
 
+import (
+	"context"
+)
+
 type Mariadb struct{}
 
-// example usage: dagger up --port 3306:3306 serve
-func (m *Mariadb) Serve() *Service {
+// example usage: "dagger call container-echo --string-arg yo"
+func (m *Mariadb) ContainerEcho(stringArg string) *Container {
+	return dag.Container().From("alpine:latest").WithExec([]string{"echo", stringArg})
+}
+
+// example usage: "dagger call grep-dir --directory-arg . --pattern GrepDir"
+func (m *Mariadb) GrepDir(ctx context.Context, directoryArg *Directory, pattern string) (string, error) {
 	return dag.Container().
-		From("mariadb:latest").
-		WithEnvVariable("MARIADB_ALLOW_EMPTY_ROOT_PASSWORD", "1").
-		WithExposedPort(3306).
-		AsService()
+		From("alpine:latest").
+		WithMountedDirectory("/mnt", directoryArg).
+		WithWorkdir("/mnt").
+		WithExec([]string{"grep", "-R", pattern, "."}).
+		Stdout(ctx)
 }
