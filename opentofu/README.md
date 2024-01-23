@@ -1,5 +1,5 @@
 # Example
 
 ```
-echo '{OpenTofu{run(command:"hey"){id}}}' | dagger query
+dagger call run --command $command
 ```

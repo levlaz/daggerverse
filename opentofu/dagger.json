@@ -1,5 +1,4 @@
 {
-  "root": "",
   "name": "OpenTofu",
   "sdk": "go"
 }
