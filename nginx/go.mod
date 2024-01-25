@@ -1,4 +1,4 @@
-module main
+module nginx
 
 go 1.21.3
 
