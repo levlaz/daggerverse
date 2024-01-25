@@ -1,4 +1,4 @@
-module mariadb
+module secret
 
 go 1.21.3
 

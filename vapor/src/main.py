@@ -57,5 +57,6 @@ def vapor_list() -> str:
         .with_env_variable("CACHEBUSTER", str(datetime.now()))
         .with_workdir(VENDOR_BIN)
         .with_exec(["php", "vapor", "list"])
+        .with_exec(["echo", "it works!"])
         .stdout()
     )
