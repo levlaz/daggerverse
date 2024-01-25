@@ -1,8 +1,9 @@
-module main
+module launchdarkly
 
 go 1.21.3
 
 require (
+	dagger.io/dagger v0.9.7
 	github.com/99designs/gqlgen v0.17.31
 	github.com/Khan/genqlient v0.6.0
 	golang.org/x/exp v0.0.0-20231006140011-7918f672742d
@@ -10,6 +11,8 @@ require (
 )
 
 require (
-	github.com/stretchr/testify v1.8.3 // indirect
-	github.com/vektah/gqlparser/v2 v2.5.6 // indirect
+	github.com/adrg/xdg v0.4.0 // indirect
+	github.com/mitchellh/go-homedir v1.1.0 // indirect
+	github.com/vektah/gqlparser/v2 v2.5.6
+	golang.org/x/sys v0.13.0 // indirect
 )
