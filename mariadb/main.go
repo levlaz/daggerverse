@@ -1,3 +1,8 @@
+// MariaDB Module
+//
+// This module allows you to easily add MariaDB as a service
+// to your pipeline.
+
 package main
 
 import (
