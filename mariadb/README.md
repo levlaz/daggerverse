@@ -5,7 +5,7 @@ Dagger Module for MariaDB Service
 ## CLI Examples
 
 ```sh
-dagger up -m mariadb --port 3306:3306 serve
+dagger call serve up --ports=3308:3306
 ```
 
 ## API Examples 
