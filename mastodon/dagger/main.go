@@ -14,6 +14,8 @@ import (
 type Mastodon struct{}
 
 // Send toot to mastodon instance
+//
+// Example usage: dagger call toot --server="" --client-id="" --client-secret=env:MASTODON_CLIENT_SECRET --access-token=env:MASTODON_ACCESS_TOKEN --msg="hello from the DAG"
 func (m *Mastodon) Toot(
 	ctx context.Context,
 	// url of mastodon instance
