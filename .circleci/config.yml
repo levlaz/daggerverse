@@ -24,6 +24,7 @@ jobs:
       - run:
           name: Stop Dagger Engine
           command: docker stop -t 300 $(docker ps --filter name="dagger-engine-*" -q)
+
   toot:
     docker:
       - image: cimg/go:1.17
@@ -45,9 +46,14 @@ jobs:
             --access-token=env:MASTODON_ACCESS_TOKEN \
             --msg="I just published a new version of a Dagger module, $CIRCLE_TAG, check it out! https://github.com/levlaz/daggerverse" \
             --visibility=direct
-    filters:
-        tags:
-            only: /^v.*/
-        branches:
-            ignore: /.*/
 
+workflows:
+    build:
+        jobs:
+            - build
+    notify:
+        jobs:
+            - toot:
+                filters:
+                    tags:
+                        only: /^v.*/
