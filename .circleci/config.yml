@@ -50,9 +50,14 @@ workflows:
     build:
         jobs:
             - build
+                filters:
+                    tags:
+                        only: /.*/
     notify:
         jobs:
             - toot:
+                reuquires:
+                    - build
                 filters:
                     tags:
                         only: /^v.*/
