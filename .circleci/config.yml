@@ -10,7 +10,6 @@ jobs:
       - setup_remote_docker:
           version: 20.10.14
           docker_layer_caching: true
-
       - run:
           name: Install Dagger CLI
           command: cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sudo sh; cd -; }
@@ -25,3 +24,30 @@ jobs:
       - run:
           name: Stop Dagger Engine
           command: docker stop -t 300 $(docker ps --filter name="dagger-engine-*" -q)
+  toot:
+    docker:
+      - image: cimg/go:1.17
+    resource_class: medium
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.14
+          docker_layer_caching: true
+      - run:
+          name: Install Dagger CLI
+          command: cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sudo sh; cd -; }
+      - run: 
+          name: send toot
+          command: dagger call toot \
+            --server="https://hachyderm.io" \
+            --client-id="-3UXCeKKYu3U1z2ZANnONS-Artc-WbMuMRKOuSvzuiI" \
+            --client-secret=env:MASTODON_CLIENT_SECRET \
+            --access-token=env:MASTODON_ACCESS_TOKEN \
+            --msg="I just published a new version of a Dagger module, $CIRCLE_TAG, check it out! https://github.com/levlaz/daggerverse" \
+            --visibility=direct
+    filters:
+        tags:
+            only: /^v.*/
+        branches:
+            ignore: /.*/
+
