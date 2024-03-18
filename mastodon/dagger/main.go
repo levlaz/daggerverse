@@ -28,6 +28,10 @@ func (m *Mastodon) Toot(
 	accessToken *Secret,
 	// toot body
 	msg string,
+	// toot visibility, one of public, unlisted, private, direct
+	// +optional
+	// +default="public"
+	visibility string,
 ) (string, error) {
 	clientSecretValue, err := clientSecret.Plaintext(ctx)
 	if err != nil {
@@ -47,7 +51,8 @@ func (m *Mastodon) Toot(
 	})
 
 	toot, err := c.PostStatus(context.Background(), &mastodon.Toot{
-		Status: msg,
+		Status:     msg,
+		Visibility: visibility,
 	})
 	if err != nil {
 		log.Fatal(err)
