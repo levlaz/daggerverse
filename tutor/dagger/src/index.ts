@@ -1,7 +1,5 @@
 /**
- * Dagger Tutor
- *
- * An interactive dagger module for learning dagger.
+ * Learn Dagger Interactively: dagger -m github.com/levlaz/daggerverse/tutor call start
  */
 
 import { dag, Container, Directory, object, func } from "@dagger.io/dagger";
