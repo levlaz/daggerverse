@@ -50,10 +50,10 @@ func (m *Mariadb) Serve(
 // Debug MariaDB from Client Container
 //
 // example usage: dagger call debug terminal
-// --
+//
 // this will pop you into a shell, you can then connect to the
-// mariadb container with 'mariadb -h db' and see the sample database
-// with 'use sample-datbase'
+// mariadb container with `mariadb -h db` and see the sample database
+// with `use sample-datbase`
 func (m *Mariadb) Debug() *Container {
 	return dag.Container().
 		From("mariadb:latest").
