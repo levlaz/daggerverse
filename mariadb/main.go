@@ -13,9 +13,11 @@ type Mariadb struct{}
 
 // Return MariaDB Container
 func (m *Mariadb) Base(
+	// Version of MariaDB to use
 	// +optional
 	// +default="latest"
 	version string,
+	// Database name
 	// +optional
 	// +defeault="sample-database"
 	dbName string,
@@ -33,9 +35,11 @@ func (m *Mariadb) Base(
 // if you'd like to run on a different port then:
 // dagger call serve up --ports=3308:3306
 func (m *Mariadb) Serve(
+	// Version of MariaDB to use
 	// +optional
 	// +default="latest"
 	version string,
+	// Database name
 	// +optional
 	// +default="sample-database"
 	dbName string,
