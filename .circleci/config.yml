@@ -42,7 +42,7 @@ jobs:
             --client-id="-3UXCeKKYu3U1z2ZANnONS-Artc-WbMuMRKOuSvzuiI"
             --client-secret=env:MASTODON_CLIENT_SECRET
             --access-token=env:MASTODON_ACCESS_TOKEN
-            --msg="I just published a new version of a #dagger module, $CIRCLE_TAG, check it out! https://github.com/levlaz/daggerverse"
+            --msg="I just published a new version of a \#dagger module, $CIRCLE_TAG, check it out! https://github.com/levlaz/daggerverse"
       - run:
           name: Stop Dagger Engine
           command: docker stop -t 300 $(docker ps --filter name="dagger-engine-*" -q)
