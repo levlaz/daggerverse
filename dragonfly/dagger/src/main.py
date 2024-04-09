@@ -1,6 +1,6 @@
 """Dragonfly DB Module.
 
-This module provides a simpele way to use DragonflyDB as a part of your 
+This module provides a simple way to use DragonflyDB as a part of your 
 CI/CD pipeline.
 """
 
