@@ -1,0 +1,10 @@
+[project]
+name = "main"
+version = "0.0.0"
+dependencies = [
+    "tweepy"
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
