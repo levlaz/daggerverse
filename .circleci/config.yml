@@ -24,7 +24,7 @@ jobs:
           name: Stop Dagger Engine
           command: docker stop -t 300 $(docker ps --filter name="dagger-engine-*" -q)
 
-  toot:
+  publish_and_notify:
     docker:
       - image: cimg/go:1.17
     resource_class: medium
@@ -35,10 +35,13 @@ jobs:
       - run:
           name: Install Dagger CLI
           command: cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sudo sh; cd -; }
+      - run:
+            name: publish module
+            command: dagger -m github.com/levlaz/daggerverse/${CIRCLE_TAG//\//@} functions
       - run: 
           name: send toot
           command: |
-            dagger -m github.com/levlaz/daggerverse/${CIRCLE_TAG//\//@} call toot \
+            dagger -m github.com/levlaz/daggerverse/mastodon call toot \
             --server="https://hachyderm.io" \
             --client-id="-3UXCeKKYu3U1z2ZANnONS-Artc-WbMuMRKOuSvzuiI" \
             --client-secret=env:MASTODON_CLIENT_SECRET \
@@ -47,7 +50,7 @@ jobs:
       - run: 
           name: send tweet
           command: |
-            dagger -m github.com/levlaz/daggerverse/${CIRCLE_TAG//\//@} call tweet \
+            dagger -m github.com/levlaz/daggerverse/twitter call tweet \
             --bearer-token env:TWITTER_BEARER_TOKEN \
             --consumer-key env:TWITTER_CONSUMER_KEY \
             --consumer-secret env:TWITTER_CONSUMER_SECRET \
@@ -64,7 +67,7 @@ workflows:
             - build
     notify:
         jobs:
-            - toot:
+            - publish_and_notify:
                 filters:
                     tags:
                         only: /.*v.*/
