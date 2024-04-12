@@ -37,7 +37,9 @@ jobs:
           command: cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sudo sh; cd -; }
       - run:
             name: publish module
-            command: curl https://daggerverse.dev/crawl/github.com/levlaz/daggerverse/${CIRCLE_TAG//\//@} 
+            command: |
+                cd ${CIRCLE_TAG%/*}
+                dagger publish ${CIRCLE_TAG//\//@}
       - run: 
           name: send toot
           command: |
