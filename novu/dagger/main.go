@@ -1,5 +1,8 @@
 // Mutli Channel Notifications for CI with Novu
-// https://novu.co/
+//
+// This module allows you to send multi-channel notifications from your
+// Dagger pipeline using [Novu](https://novu.co/). The open source notification
+// infrastructure platform.
 
 package main
 
