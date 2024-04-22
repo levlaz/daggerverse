@@ -39,7 +39,7 @@ jobs:
             name: publish module
             command: |
                 cd ${CIRCLE_TAG%/*}
-                dagger publish ${CIRCLE_TAG//\//@}
+                dagger publish
       - run: 
           name: send toot
           command: |

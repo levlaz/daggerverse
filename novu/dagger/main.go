@@ -9,7 +9,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 
 	novu "github.com/novuhq/go-novu/lib"
 )
@@ -26,7 +25,7 @@ func (m *Novu) Notify(
 	event string,
 	// Message body for notification
 	msg string,
-) string {
+) (string, error) {
 	ctx := context.Background()
 
 	to := map[string]interface{}{
@@ -39,7 +38,7 @@ func (m *Novu) Notify(
 
 	tokenValue, err := token.Plaintext(ctx)
 	if err != nil {
-		return ""
+		return "", err
 	}
 
 	novuClient := novu.NewAPIClient(tokenValue, &novu.Config{})
@@ -48,9 +47,8 @@ func (m *Novu) Notify(
 		Payload: payload,
 	})
 	if err != nil {
-		log.Fatal("Novu error", err.Error())
-		// return "novu error"
+		return "", err
 	}
 
-	return fmt.Sprintln(triggerResp)
+	return fmt.Sprintln(triggerResp), nil
 }
