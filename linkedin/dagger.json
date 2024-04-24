@@ -1,0 +1,6 @@
+{
+  "name": "linkedin",
+  "sdk": "typescript",
+  "source": "dagger",
+  "engineVersion": "v0.11.1"
+}
