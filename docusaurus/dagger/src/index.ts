@@ -3,6 +3,21 @@
  *
  * This module allows you to run docusaurus sites locally with Dagger
  * without needing to install any additional dependencies.
+ * 
+ * Example Usage:
+ * 
+ * `dagger call -m github.com/levlaz/daggerverse/docusaurus run --dir "/src/docs" --src https://github.com/kpenfound/dagger#kyle/docs-239-convert-secrets as-service up`
+ * 
+ * The example above shows how to grab a rempote git branch, the basic 
+ * structure is https://github.com/$USER/$REPO#$BRANCH. The `src` argument can 
+ * take a local directory, but this module becomes esepecially 
+ * useful when you pass in remote git repos. In particular, imagine you are trying 
+ * to preview a PR for a docs change. You can simply pass in the git branch from 
+ * your fork and preview the docs without needing to install any local depencies 
+ * or have to remember how to fetch remote branches locally. 
+ * 
+ * Since our run function returns a dagger `Container` type, we can run it as a 
+ * service by chaining `as-service up` to the end of our invokation.
  */
 
 import { dag, Container, Directory, object, func } from "@dagger.io/dagger"
