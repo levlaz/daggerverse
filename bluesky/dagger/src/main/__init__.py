@@ -1,6 +1,6 @@
 """Bluesky Dagger Module 
 
-Send posts to Bluesky from your Dagger Pipeleines
+Send posts to Bluesky from your Dagger Pipelines
 """
 
 import dagger
@@ -19,13 +19,11 @@ class Bluesky:
         host: Annotated[str, Doc("Bluesky server url")] = "https://bsky.social",
     ) -> str:
         """Send post to Bluesky"""
-        # get secret
-        pwd = await password.plaintext()
-
         # create Bluesky session
         client = Client(base_url=host)
         client.login(email, await password.plaintext())
 
+        # post message
         post = client.send_post(text)
         
         return post.uri
