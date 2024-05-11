@@ -1,0 +1,11 @@
+[project]
+name = "main"
+version = "0.0.0"
+dependencies = [
+    "atproto>=0.0.46"
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
