@@ -37,6 +37,11 @@ class Docusaurus {
       .from("node:lts-alpine")
       .withMountedDirectory("/src", src)
       .withWorkdir(dir)
+      .withMountedCache(
+        `${dir}/node_modules`,
+        dag.cacheVolume("node-docusaurus-docs"),
+      )
+      .withMountedCache("/root/.npm", dag.cacheVolume("node-docusaurus-root"))
       .withExposedPort(3000)
       .withExec(["npm", "install"])
       .withExec(["npm", "start", "--", "--host", "0.0.0.0"])
