@@ -2,5 +2,5 @@
   "name": "docusaurus",
   "sdk": "typescript",
   "source": "dagger",
-  "engineVersion": "v0.11.2"
+  "engineVersion": "v0.11.4"
 }

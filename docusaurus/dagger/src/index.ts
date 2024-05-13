@@ -6,7 +6,7 @@
  * 
  * Example Usage:
  * 
- * `dagger call -m github.com/levlaz/daggerverse/docusaurus serve --dir "/src/docs" --src https://github.com/kpenfound/dagger#kyle/docs-239-convert-secrets`
+ * `dagger call -m github.com/levlaz/daggerverse/docusaurus serve --dir "/src/docs" --src https://github.com/kpenfound/dagger#kyle/docs-239-convert-secrets` up
  * 
  * The example above shows how to grab a remote git branch, the basic 
  * structure is https://github.com/$USER/$REPO#$BRANCH. The `src` argument can 
@@ -18,7 +18,7 @@
  * 
  */
 
-import { dag, Void, Container, Directory, object, func } from "@dagger.io/dagger"
+import { dag, Service, Container, Directory, object, func } from "@dagger.io/dagger"
 
 @object()
 class Docusaurus {
@@ -51,10 +51,9 @@ class Docusaurus {
    * @param dir Optional working directory if you need to execute docusaurus commands outside of your root
    */
   @func()
-  serve(src: Directory, dir = "/src"): Promise<Void> {
+  serve(src: Directory, dir = "/src"): Service {
     return this.build(src, dir)
       .withExec(["npm", "start", "--", "--host", "0.0.0.0"])
       .asService()
-      .up()
   }
 }
