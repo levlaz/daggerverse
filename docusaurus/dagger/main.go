@@ -34,22 +34,36 @@ func (m *Docusaurus) Build(
 	// +optional
 	// +default="/src"
 	dir string,
+	// Optional flag to disable cache
+	// +optional
+	// +default=true
+	cache bool,
 ) *Container {
-	return dag.
-		Container().
-		From("node:lts-alpine").
-		WithMountedDirectory("/src", src).
-		WithWorkdir(dir).
-		WithMountedCache(
-			fmt.Sprintf("%s/node_modules", dir),
-			dag.CacheVolume("node-docusaurus-docs"),
-		).
-		WithMountedCache(
-			"/root/.npm",
-			dag.CacheVolume("node-docusaurus-root"),
-		).
-		WithExposedPort(3000).
-		WithExec([]string{"npm", "install"})
+	if cache {
+		return dag.
+			Container().
+			From("node:lts-alpine").
+			WithMountedDirectory("/src", src).
+			WithWorkdir(dir).
+			WithMountedCache(
+				fmt.Sprintf("%s/node_modules", dir),
+				dag.CacheVolume("node-docusaurus-docs"),
+			).
+			WithMountedCache(
+				"/root/.npm",
+				dag.CacheVolume("node-docusaurus-root"),
+			).
+			WithExposedPort(3000).
+			WithExec([]string{"npm", "install"})
+	} else {
+		return dag.
+			Container().
+			From("node:lts-alpine").
+			WithMountedDirectory("/src", src).
+			WithWorkdir(dir).
+			WithExposedPort(3000).
+			WithExec([]string{"npm", "install"})
+	}
 }
 
 // Run docs site locally
@@ -61,8 +75,12 @@ func (m *Docusaurus) Serve(
 	// +optional
 	// +default="/src"
 	dir string,
+	// Optional flag to disable cache
+	// +optional
+	// +default=true
+	cache bool,
 ) *Service {
-	return m.Build(src, dir).
+	return m.Build(src, dir, cache).
 		WithExec([]string{"npm", "start", "--", "--host", "0.0.0.0"}).
 		AsService()
 }
