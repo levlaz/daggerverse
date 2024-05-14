@@ -1,2 +1,4 @@
-/sdk
-/node_modules/**
+/dagger.gen.go
+/internal/dagger
+/internal/querybuilder
+/internal/telemetry

@@ -1,6 +1,6 @@
 {
   "name": "docusaurus",
-  "sdk": "typescript",
+  "sdk": "go",
   "source": "dagger",
   "engineVersion": "v0.11.4"
 }
