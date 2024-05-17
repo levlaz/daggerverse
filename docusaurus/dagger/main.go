@@ -20,14 +20,10 @@
 package main
 
 import (
-	"context"
 	"fmt"
 )
 
-type Docusaurus struct{}
-
-// Return container for running docusaurus with docs mounted.
-func (m *Docusaurus) Build(
+func New(
 	// The source directory of your docusaurus site, this can be a local directory or a remote git repo
 	src *Directory,
 	// Optional working directory if you need to execute docusaurus commands outside of your root
@@ -36,18 +32,52 @@ func (m *Docusaurus) Build(
 	dir string,
 	// Optional flag to disable cache
 	// +optional
-	// +default=true
-	cache bool,
-) *Container {
-	if cache {
+	// +default=false
+	disableCache bool,
+	// Optional cache volume name; this is useful if you work with multiple projects
+	// or have node_dependencies that are rapidly changing to avoid issues with
+	// npm having failures.
+	// +optional
+	// +default="node-docusaurus-docs"
+	cacheVolumeName string,
+) *Docusaurus {
+	return &Docusaurus{
+		Src:             src,
+		Dir:             dir,
+		DisableCache:    disableCache,
+		CacheVolumeName: cacheVolumeName,
+	}
+}
+
+type Docusaurus struct {
+	Src             *Directory
+	Dir             string
+	DisableCache    bool
+	CacheVolumeName string
+}
+
+// Return base container for running docusaurus with docs mounted and docusaurus
+// dependencies installed.
+func (m *Docusaurus) Base() *Container {
+	if m.DisableCache != false {
 		return dag.
 			Container().
 			From("node:lts-alpine").
-			WithMountedDirectory("/src", src).
-			WithWorkdir(dir).
+			WithoutEntrypoint().
+			WithMountedDirectory("/src", m.Src).
+			WithWorkdir(m.Dir).
+			WithExposedPort(3000).
+			WithExec([]string{"npm", "install"})
+	} else {
+		return dag.
+			Container().
+			From("node:lts-alpine").
+			WithoutEntrypoint().
+			WithMountedDirectory("/src", m.Src).
+			WithWorkdir(m.Dir).
 			WithMountedCache(
-				fmt.Sprintf("%s/node_modules", dir),
-				dag.CacheVolume("node-docusaurus-docs"),
+				fmt.Sprintf("%s/node_modules", m.Dir),
+				dag.CacheVolume(m.CacheVolumeName),
 			).
 			WithMountedCache(
 				"/root/.npm",
@@ -55,32 +85,27 @@ func (m *Docusaurus) Build(
 			).
 			WithExposedPort(3000).
 			WithExec([]string{"npm", "install"})
-	} else {
-		return dag.
-			Container().
-			From("node:lts-alpine").
-			WithMountedDirectory("/src", src).
-			WithWorkdir(dir).
-			WithExposedPort(3000).
-			WithExec([]string{"npm", "install"})
 	}
 }
 
-// Run docs site locally
-func (m *Docusaurus) Serve(
-	ctx context.Context,
-	// The source directory of your docusaurus site, this can be a local directory or a remote git repo
-	src *Directory,
-	// Optional working directory if you need to execute docusaurus commands outside of your root
-	// +optional
-	// +default="/src"
-	dir string,
-	// Optional flag to disable cache
-	// +optional
-	// +default=true
-	cache bool,
-) *Service {
-	return m.Build(src, dir, cache).
+// Build produciton docs
+func (m *Docusaurus) Build() *Directory {
+	return m.Base().
+		WithExec([]string{"npm", "run", "build"}).
+		Directory("build")
+}
+
+// Serve production docs locally as a service
+func (m *Docusaurus) Serve() *Service {
+	return m.Base().
+		WithDirectory("build", m.Build()).
+		WithExec([]string{"npm", "run", "serve"}).
+		AsService()
+}
+
+// Build and serve development docs as a service
+func (m *Docusaurus) ServeDev() *Service {
+	return m.Base().
 		WithExec([]string{"npm", "start", "--", "--host", "0.0.0.0"}).
 		AsService()
 }
