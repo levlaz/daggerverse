@@ -88,7 +88,7 @@ func (m *Docusaurus) Base() *Container {
 	}
 }
 
-// Build produciton docs
+// Build production docs
 func (m *Docusaurus) Build() *Directory {
 	return m.Base().
 		WithExec([]string{"npm", "run", "build"}).
