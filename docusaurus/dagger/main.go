@@ -59,22 +59,14 @@ type Docusaurus struct {
 // Return base container for running docusaurus with docs mounted and docusaurus
 // dependencies installed.
 func (m *Docusaurus) Base() *Container {
-	if m.DisableCache != false {
-		return dag.
-			Container().
-			From("node:lts-alpine").
-			WithoutEntrypoint().
-			WithMountedDirectory("/src", m.Src).
-			WithWorkdir(m.Dir).
-			WithExposedPort(3000).
-			WithExec([]string{"npm", "install"})
-	} else {
-		return dag.
-			Container().
-			From("node:lts-alpine").
-			WithoutEntrypoint().
-			WithMountedDirectory("/src", m.Src).
-			WithWorkdir(m.Dir).
+	ctr := dag.Container().
+		From("node:lts-alpine").
+		WithoutEntrypoint().
+		WithMountedDirectory("/src", m.Src).
+		WithWorkdir(m.Dir)
+
+	if !m.DisableCache {
+		ctr = ctr.
 			WithMountedCache(
 				fmt.Sprintf("%s/node_modules", m.Dir),
 				dag.CacheVolume(m.CacheVolumeName),
@@ -82,13 +74,17 @@ func (m *Docusaurus) Base() *Container {
 			WithMountedCache(
 				"/root/.npm",
 				dag.CacheVolume("node-docusaurus-root"),
-			).
-			WithExposedPort(3000).
-			WithExec([]string{"npm", "install"})
+			)
 	}
+
+	ctr = ctr.
+		WithExposedPort(3000).
+		WithExec([]string{"npm", "install"})
+
+	return ctr
 }
 
-// Build produciton docs
+// Build production docs
 func (m *Docusaurus) Build() *Directory {
 	return m.Base().
 		WithExec([]string{"npm", "run", "build"}).
