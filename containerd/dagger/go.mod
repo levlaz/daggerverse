@@ -1,6 +1,6 @@
 module dagger/containerd
 
-go 1.22.3
+go 1.22.2
 
 require (
 	github.com/99designs/gqlgen v0.17.44
@@ -19,7 +19,7 @@ require (
 require (
 	github.com/Microsoft/hcsshim v0.11.5 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
-	github.com/containerd/containerd v1.7.17 // indirect
+	github.com/containerd/containerd v1.7.17
 	github.com/containerd/log v0.1.0 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
