@@ -1,0 +1,6 @@
+{
+  "name": "miniflux",
+  "sdk": "python",
+  "source": "dagger",
+  "engineVersion": "v0.11.6"
+}
