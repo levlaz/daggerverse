@@ -1,7 +1,10 @@
 [project]
 name = "main"
 version = "0.0.0"
-dependencies = ["miniflux"]
+dependencies = [
+    "miniflux", 
+    "jinja2"
+]
 
 [build-system]
 requires = ["hatchling"]

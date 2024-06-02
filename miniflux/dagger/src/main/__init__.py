@@ -25,6 +25,17 @@ class Miniflux:
         Doc("optional, category id for blogroll, if not set will grab all feeds."),
     ]
 
+    async def _get_feeds(self) -> list:
+        """Return list of feeds from miniflux server"""
+        client = miniflux.Client(self.host, api_key=await self.token.plaintext())
+
+        if self.category_id is None:
+            feeds = client.get_feeds()
+        else:
+            feeds = client.get_category_feeds(self.category_id)
+
+        return feeds
+
     @function
     async def generate_sources(self) -> dagger.File:
         """Generate sources file for openring
@@ -35,17 +46,41 @@ class Miniflux:
 
         https://daggerverse.dev/mod/github.com/levlaz/daggerverse/openring@39958eb474dcb1922439b2a829be6af71d6bc263#Openring.openring
         """
-        client = miniflux.Client(self.host, api_key=await self.token.plaintext())
-
-        if self.category_id is None:
-            feeds = client.get_feeds()
-        else:
-            feeds = client.get_category_feeds(self.category_id)
-
-        urls = [feed["feed_url"] for feed in feeds]
+        urls = [feed["feed_url"] for feed in await self._get_feeds()]
 
         with open("sources.txt", "w") as f:
             for url in urls:
                 f.write(f"{url}\n")
 
-        return await dag.current_module().workdir_file("sources.txt")
+        return dag.current_module().workdir_file("sources.txt")
+
+    @function
+    async def generate_blogroll(self) -> dagger.File:
+        """Generate blogroll template
+
+        This function uses the Quik templating library to create a blog roll
+        list that you can embed in your own website based on the blogs you
+        read in miniflux.
+        """
+        from jinja2 import Template
+
+        template = Template("""
+        <h1>Blogroll</h1>
+        <ul>
+            {% for site in sites %}
+                <li>
+                    <a href="{{ site.url }}">{{ site.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>               
+        """)
+
+        sites = [
+            {"url": site["site_url"], "title": site["title"]}
+            for site in await self._get_feeds()
+        ]
+
+        with open("blogroll.html", "w") as f:
+            f.write(template.render(sites=sites))
+
+        return dag.current_module().workdir_file("blogroll.html")
