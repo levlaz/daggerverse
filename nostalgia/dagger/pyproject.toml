@@ -1,0 +1,14 @@
+[project]
+name = "main"
+version = "0.0.0"
+dependencies = [
+    "beautifulsoup4", 
+    "lxml",
+    "requests",
+    "python-dateutil"
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
