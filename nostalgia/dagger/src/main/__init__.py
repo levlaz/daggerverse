@@ -1,18 +1,19 @@
 """
-The Nostalgia Dagger Module
+The Nostalgia RSS parser 
 
 This module parses RSS Feeds to help you be more nostalgic.
 """
 
 import pprint
 from datetime import date
+from typing import Annotated
 
 import requests
 from bs4 import BeautifulSoup
 from dateutil import parser
 
 import dagger
-from dagger import dag, function, object_type
+from dagger import Doc, dag, function, object_type
 
 # uncomment to enable debug logging
 # import logging
@@ -23,7 +24,11 @@ from dagger import dag, function, object_type
 
 @object_type
 class Nostalgia:
-    feed_url: str
+    """
+    Nostalgia functions
+    """
+
+    feed_url: Annotated[str, Doc("URL for RSS feed XML")]
 
     def _get_pub_date(self, post: str) -> tuple[date, date]:
         """Parse item and return (month, day) tuple"""
