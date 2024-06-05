@@ -122,6 +122,10 @@ class Miniflux:
         starred = await self._get_starred(limit=limit)
 
         with open("starred.html", "w") as f:
-            f.write(template.render(posts=starred["entries"], heading=heading))
+            f.write(template.render(
+                posts=starred["entries"],
+                heading=heading,
+                limit=limit)
+            )
 
         return dag.current_module().workdir_file("starred.html")
