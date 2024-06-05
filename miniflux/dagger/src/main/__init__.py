@@ -9,11 +9,12 @@ import miniflux
 
 from typing import Annotated
 from dagger import dag, function, object_type, Doc
+from jinja2 import Template
 
 # uncomment below to enable debug logging
-# import logging
-# from dagger.log import configure_logging
-# configure_logging(logging.DEBUG)
+import logging
+from dagger.log import configure_logging
+configure_logging(logging.DEBUG)
 
 
 @object_type
@@ -35,6 +36,17 @@ class Miniflux:
             feeds = client.get_category_feeds(self.category_id)
 
         return feeds
+    
+    async def _get_starred(
+            self, 
+            limit: Annotated[int, Doc("number of posts to return")],
+        ) -> list:
+        """Return list of starred posts from miniflux server"""
+        client = miniflux.Client(self.host, api_key=await self.token.plaintext())
+
+        entries = client.get_entries(starred=True, limit=limit)
+
+        return entries
 
     @function
     async def generate_sources(self) -> dagger.File:
@@ -58,14 +70,12 @@ class Miniflux:
     async def generate_blogroll(self) -> dagger.File:
         """Generate blogroll template
 
-        This function uses the Quik templating library to create a blog roll
+        This function uses the Jinja templating library to create a blog roll
         list that you can embed in your own website based on the blogs you
         read in miniflux.
         """
-        from jinja2 import Template
-
         template = Template("""
-        <h1>Blogroll</h1>
+        <h3>Blogroll</h3>
         <ul>
             {% for site in sites %}
                 <li>
@@ -84,3 +94,34 @@ class Miniflux:
             f.write(template.render(sites=sites))
 
         return dag.current_module().workdir_file("blogroll.html")
+
+    @function
+    async def generate_starred(
+        self,
+        heading: Annotated[
+            str, Doc("section heading text")
+        ] = "Recent Favorite Blog Posts",
+        limit: Annotated[int, Doc("number of posts to return")] = 10,
+    ) -> dagger.File:
+        """Generate list of starred posts
+
+        This function generates a file of links for your starred posts, by default
+        you will get the 10 most recent.
+        """
+        template = Template("""
+        <h3>{{ heading }}</h3>
+        <p> This is a collection of the last {{ limit }} posts that I bookmarked.</p>
+        <ul>
+            {% for post in posts %}
+            <li>
+                <a href="{{ post.url }}">{{ post.title }}</a> from {{ post.feed.title }}
+            </li>
+            {% endfor %}
+        </ul>
+        """)
+        starred = await self._get_starred(limit=limit)
+
+        with open("starred.html", "w") as f:
+            f.write(template.render(posts=starred["entries"], heading=heading))
+
+        return dag.current_module().workdir_file("starred.html")
