@@ -109,7 +109,7 @@ class Miniflux:
         you will get the 10 most recent.
         """
         template = Template("""
-        <h3>{{ heading }}</h3>
+        <p><b>{{ heading }}</b></p>
         <p> This is a collection of the last {{ limit }} posts that I bookmarked.</p>
         <ul>
             {% for post in posts %}
