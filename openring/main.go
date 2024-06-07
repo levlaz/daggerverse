@@ -28,8 +28,23 @@ func (m *Openring) initBaseContainer() {
 func (m *Openring) Openring(
 	// File containing list of feeds to include
 	sources *File,
+	// Optional HTML template file
+	// +optional
+	template *File,
 ) (*File, error) {
 	m.initBaseContainer()
+
+	if template != nil {
+		res := m.Ctr.
+			WithFile("sources.txt", sources).
+			WithFile("in.html", template).
+			WithEnvVariable("CACHEBUSTER", time.Now().String()).
+			WithExec([]string{"sh", "-c", "./openring -S sources.txt < in.html > out.html"}).
+			File("out.html")
+
+		return res, nil
+	}
+
 	res := m.Ctr.
 		WithFile("sources.txt", sources).
 		WithEnvVariable("CACHEBUSTER", time.Now().String()).
