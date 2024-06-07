@@ -39,12 +39,16 @@ class Miniflux:
     
     async def _get_starred(
             self, 
+            direction: Annotated[str, Doc("order to retrieve posts")],
             limit: Annotated[int, Doc("number of posts to return")],
         ) -> list:
         """Return list of starred posts from miniflux server"""
         client = miniflux.Client(self.host, api_key=await self.token.plaintext())
 
-        entries = client.get_entries(starred=True, limit=limit)
+        entries = client.get_entries(
+            starred=True,
+            direction=direction,
+            limit=limit)
 
         return entries
 
@@ -101,6 +105,7 @@ class Miniflux:
         heading: Annotated[
             str, Doc("section heading text")
         ] = "Recent Favorite Blog Posts",
+        direction: Annotated[str, Doc("Order to retrieve posts, desc or asc")] = "desc",
         limit: Annotated[int, Doc("number of posts to return")] = 10,
     ) -> dagger.File:
         """Generate list of starred posts
@@ -119,7 +124,7 @@ class Miniflux:
             {% endfor %}
         </ul>
         """)
-        starred = await self._get_starred(limit=limit)
+        starred = await self._get_starred(direction=direction, limit=limit)
 
         with open("starred.html", "w") as f:
             f.write(template.render(
