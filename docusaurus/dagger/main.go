@@ -72,6 +72,10 @@ func (m *Docusaurus) Base() *Container {
 				dag.CacheVolume(m.CacheVolumeName),
 			).
 			WithMountedCache(
+				fmt.Sprintf("%s/build", m.Dir),
+				dag.CacheVolume(m.CacheVolumeName),
+			).
+			WithMountedCache(
 				"/root/.npm",
 				dag.CacheVolume("node-docusaurus-root"),
 			)
