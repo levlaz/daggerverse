@@ -1,3 +1,7 @@
+// Openring Dagger Module
+//
+// This module allows you to generate a webring snippet for your blog using the
+// openring library.
 package main
 
 import (
@@ -51,4 +55,20 @@ func (m *Openring) Openring(
 		WithExec([]string{"sh", "-c", "./openring -S sources.txt < in.html > out.html"}).
 		File("out.html")
 	return res, nil
+}
+
+// Test Openring Function
+func (m *Openring) Test(sources *File) *File {
+	template := dag.Git("https://git.sr.ht/~levlaz/openring").
+		Branch("master").
+		Tree().
+		File("in.html")
+
+	f, err := m.Openring(sources, template)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return f
 }
