@@ -73,7 +73,7 @@ func (m *Docusaurus) Base() *Container {
 			).
 			WithMountedCache(
 				fmt.Sprintf("%s/build", m.Dir),
-				dag.CacheVolume(m.CacheVolumeName),
+				dag.CacheVolume(m.CacheVolumeName+"-build"),
 			).
 			WithMountedCache(
 				"/root/.npm",
@@ -92,14 +92,18 @@ func (m *Docusaurus) Base() *Container {
 func (m *Docusaurus) Build() *Directory {
 	return m.Base().
 		WithExec([]string{"npm", "run", "build"}).
-		Directory("build")
+		// copying build to a temp directory because
+		// cache volumes cannot be exported. This is totally
+		// worth vs the time it takes to build on a cold cache
+		WithMountedDirectory("/tmp/build", dag.Directory()).
+		WithExec([]string{"cp", "-r", "build", "/tmp/build"}).
+		Directory("/tmp/build")
 }
 
 // Serve production docs locally as a service
 func (m *Docusaurus) Serve() *Service {
 	return m.Base().
-		WithDirectory("build", m.Build()).
-		WithExec([]string{"npm", "run", "serve"}).
+		WithExec([]string{"npm", "run", "serve", "--build"}).
 		AsService()
 }
 
