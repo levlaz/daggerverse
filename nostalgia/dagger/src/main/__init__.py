@@ -50,13 +50,14 @@ class Nostalgia:
 
     @function
     def today(self,
-              check_date: Annotated[str, Doc("ISO 8601 date to check posts for YYYY-MM-DD")] = ""
+              check_date: Annotated[str, Doc("day to check posts for MM-DD")] = ""
               ) -> str:
         """Pretty print posts from today over the years"""
         if check_date == "":
             check_date = date.today()
         else:
-            check_date = date.fromisoformat(check_date)
+            # note, year is not relevant, its only checkig the month and day
+            check_date = date.fromisoformat(f"2000-{check_date}")
         posts = self._get_feed().find_all("item")
 
         p = [
