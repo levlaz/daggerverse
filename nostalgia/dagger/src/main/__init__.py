@@ -49,13 +49,15 @@ class Nostalgia:
         return bs
 
     @function
-    def today(self) -> str:
+    def today(self,
+              check_date: Annotated[str, Doc("ISO 8601 date to check posts for YYYY-MM-DD")] = ""
+              ) -> str:
         """Pretty print posts from today over the years"""
-        today = date.today()
+        if check_date == "":
+            check_date = date.today()
+        else:
+            check_date = date.fromisoformat(check_date)
         posts = self._get_feed().find_all("item")
-
-        # for testing specific date
-        # today = date(2024, 12, 7)
 
         p = [
             {
@@ -65,7 +67,7 @@ class Nostalgia:
                 "year_ago": self._get_years_ago(post),
             }
             for post in posts
-            if (self._get_pub_date(post) == (today.month, today.day))
+            if (self._get_pub_date(post) == (check_date.month, check_date.day))
         ]
 
         return pprint.pformat(p)
