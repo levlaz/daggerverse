@@ -1,4 +1,6 @@
 {
   "name": "openring",
-  "sdk": "go"
+  "sdk": "go",
+  "source": "dagger",
+  "engineVersion": "v0.11.7"
 }
