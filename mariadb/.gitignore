@@ -2,3 +2,5 @@
 /internal/querybuilder/
 /querybuilder/
 /internal
+/internal/dagger
+/internal/telemetry
