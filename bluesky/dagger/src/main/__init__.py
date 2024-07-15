@@ -1,4 +1,4 @@
-"""Bluesky Dagger Module 
+"""Bluesky Dagger Module
 
 Send posts to Bluesky from your Dagger Pipelines
 """
@@ -10,11 +10,12 @@ from atproto import Client
 
 @object_type
 class Bluesky:
+    """Dagger Module for interacting with the BlueSky API"""
     @function
     async def post(
-        self, 
-        email: Annotated[str, Doc("Bluesky account email")], 
-        password: Annotated[dagger.Secret, Doc("Bluesky password")], 
+        self,
+        email: Annotated[str, Doc("Bluesky account email")],
+        password: Annotated[dagger.Secret, Doc("Bluesky password")],
         text: Annotated[str, Doc("Bluesky post message body")],
         host: Annotated[str, Doc("Bluesky server url")] = "https://bsky.social",
     ) -> str:
@@ -25,5 +26,5 @@ class Bluesky:
 
         # post message
         post = client.send_post(text)
-        
+
         return post.uri
