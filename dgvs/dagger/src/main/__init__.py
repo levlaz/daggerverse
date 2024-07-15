@@ -1,22 +1,29 @@
-"""A module for working with daggerverse
+"""Daggerverse Module
+
+Collection of functions for working wth the Daggerverse
+
+warning: this module uses undocumented APIs that are subject to break at any
+moment. Proceed at your own risk.
 """
 
 import dagger
 from dagger import dag, function, object_type
 import requests
-import pprint 
+import pprint
 
 @object_type
 class Dgvs:
+    """Dagger module for interacting with Daggerverse"""
     def _get_modules(self) -> str:
+        """Return list of all modules"""
         return requests.get("https://daggerverse.dev/api/refs").json()
 
     @function
     def stats(self) -> str:
+        """Return pretty printed report of module stats"""
         modules = self._get_modules()
-        
+
         modules = list({module['path'] for module in modules})
-        # modules = [module for module in modules if module['release'] != '']
 
         stats = {
             "first": modules[0],
