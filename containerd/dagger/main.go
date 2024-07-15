@@ -1,4 +1,6 @@
 // containerd utilities
+//
+// Collection of utility functions for containerd
 package main
 
 import (
@@ -7,6 +9,7 @@ import (
 	platformFormat "github.com/containerd/containerd/platforms"
 )
 
+// Containerd
 type Containerd struct{}
 
 // returns the architecture of the provided platform
