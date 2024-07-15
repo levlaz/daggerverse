@@ -6,7 +6,7 @@
 //
 // Example Usage:
 //
-// `dagger call -m github.com/levlaz/daggerverse/docusaurus serve --dir "/src/docs" --src https://github.com/kpenfound/dagger#kyle/docs-239-convert-secrets` up
+// `dagger call -m github.com/levlaz/daggerverse/docusaurus --dir "/src/docs" --src https://github.com/kpenfound/dagger#kyle/docs-239-convert-secrets` serve up
 //
 // The example above shows how to grab a remote git branch, the basic
 // structure is https://github.com/$USER/$REPO#$BRANCH. The `src` argument can
@@ -20,12 +20,13 @@
 package main
 
 import (
+	"dagger/docusaurus/internal/dagger"
 	"fmt"
 )
 
 func New(
 	// The source directory of your docusaurus site, this can be a local directory or a remote git repo
-	src *Directory,
+	src *dagger.Directory,
 	// Optional working directory if you need to execute docusaurus commands outside of your root
 	// +optional
 	// +default="/src"
@@ -49,8 +50,9 @@ func New(
 	}
 }
 
+// Docusaurus
 type Docusaurus struct {
-	Src             *Directory
+	Src             *dagger.Directory
 	Dir             string
 	DisableCache    bool
 	CacheVolumeName string
@@ -58,7 +60,7 @@ type Docusaurus struct {
 
 // Return base container for running docusaurus with docs mounted and docusaurus
 // dependencies installed.
-func (m *Docusaurus) Base() *Container {
+func (m *Docusaurus) Base() *dagger.Container {
 	ctr := dag.Container().
 		From("node:lts-alpine").
 		WithoutEntrypoint().
@@ -89,7 +91,7 @@ func (m *Docusaurus) Base() *Container {
 }
 
 // Build production docs
-func (m *Docusaurus) Build() *Directory {
+func (m *Docusaurus) Build() *dagger.Directory {
 	return m.Base().
 		WithExec([]string{"npm", "run", "build"}).
 		// copying build to a temp directory because
@@ -101,14 +103,15 @@ func (m *Docusaurus) Build() *Directory {
 }
 
 // Serve production docs locally as a service
-func (m *Docusaurus) Serve() *Service {
+func (m *Docusaurus) Serve() *dagger.Service {
 	return m.Base().
+		WithExec([]string{"npm", "run", "build"}).
 		WithExec([]string{"npm", "run", "serve", "--build"}).
 		AsService()
 }
 
 // Build and serve development docs as a service
-func (m *Docusaurus) ServeDev() *Service {
+func (m *Docusaurus) ServeDev() *dagger.Service {
 	return m.Base().
 		WithExec([]string{"npm", "start", "--", "--host", "0.0.0.0"}).
 		AsService()
