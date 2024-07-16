@@ -98,7 +98,7 @@ func (m *Docusaurus) Build() *dagger.Directory {
 		// cache volumes cannot be exported. This is totally
 		// worth vs the time it takes to build on a cold cache
 		WithMountedDirectory("/tmp/build", dag.Directory()).
-		WithExec([]string{"cp", "-r", "build", "/tmp/build"}).
+		WithExec([]string{"cp", "-r", "build/.", "/tmp/build"}).
 		Directory("/tmp/build")
 }
 

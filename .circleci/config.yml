@@ -12,14 +12,31 @@ jobs:
       - run:
           name: Install Dagger CLI
           command: cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sudo sh; cd -; }
-      - run: 
-          command: env 
       - run:
-          name: show dagger version 
+          command: env
+      - run:
+          name: show dagger version
           command: dagger version
-      - run: 
-          name: get-ip smoke test 
+      - run:
+          name: get-ip smoke test
           command: dagger call --progress=plain -m get-ip run
+      - run:
+          name: Stop Dagger Engine
+          command: docker stop -t 300 $(docker ps --filter name="dagger-engine-*" -q)
+  test:
+    docker:
+      - image: cimg/go:1.17
+    resource_class: medium
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Install Dagger CLI
+          command: cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sudo sh; cd -; }
+      - run:
+          name: run docusaurus tests
+          command: dagger call -m docusaurus/tests all
       - run:
           name: Stop Dagger Engine
           command: docker stop -t 300 $(docker ps --filter name="dagger-engine-*" -q)
@@ -36,11 +53,11 @@ jobs:
           name: Install Dagger CLI
           command: cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sudo sh; cd -; }
       - run:
-            name: publish module
-            command: |
-                cd ${CIRCLE_TAG%/*}
-                dagger publish
-      - run: 
+          name: publish module
+          command: |
+            cd ${CIRCLE_TAG%/*}
+            dagger publish
+      - run:
           name: send toot
           command: |
             dagger -m github.com/levlaz/daggerverse/mastodon call toot \
@@ -49,7 +66,7 @@ jobs:
             --client-secret=env:MASTODON_CLIENT_SECRET \
             --access-token=env:MASTODON_ACCESS_TOKEN \
             --msg="I just published a new version of a #dagger module, $CIRCLE_TAG, check it out! https://daggerverse.dev/mod/github.com/levlaz/daggerverse/${CIRCLE_TAG%/*}@$CIRCLE_SHA1"
-      - run: 
+      - run:
           name: send tweet
           command: |
             dagger -m github.com/levlaz/daggerverse/twitter call tweet \
@@ -59,7 +76,7 @@ jobs:
             --auth-token env:TWITTER_AUTH_TOKEN \
             --auth-secret env:TWITTER_AUTH_SECRET \
             --text "I just published a new version of a #dagger module, $CIRCLE_TAG, check it out! https://daggerverse.dev/mod/github.com/levlaz/daggerverse/${CIRCLE_TAG%/*}@$CIRCLE_SHA1"
-      - run: 
+      - run:
           name: send post to bluesky
           command: |
             dagger -m github.com/levlaz/daggerverse/bluesky call post \
@@ -71,14 +88,15 @@ jobs:
           command: docker stop -t 300 $(docker ps --filter name="dagger-engine-*" -q)
 
 workflows:
-    build:
-        jobs:
-            - build
-    notify:
-        jobs:
-            - publish_and_notify:
-                filters:
-                    tags:
-                        only: /.*v.*/
-                    branches:
-                        ignore: /.*/
+  build:
+    jobs:
+      - build
+      - test
+  notify:
+    jobs:
+      - publish_and_notify:
+          filters:
+            tags:
+              only: /.*v.*/
+            branches:
+              ignore: /.*/
