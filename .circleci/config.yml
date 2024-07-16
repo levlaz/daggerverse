@@ -94,10 +94,7 @@ workflows:
       - test
   notify:
     jobs:
-      - build
-      - test:
-          requires:
-            - build
+      - test
       - publish_and_notify:
           requires:
             - test
