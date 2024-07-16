@@ -23,6 +23,7 @@ jobs:
       - run:
           name: Stop Dagger Engine
           command: docker stop -t 300 $(docker ps --filter name="dagger-engine-*" -q)
+
   test:
     docker:
       - image: cimg/go:1.17
@@ -88,13 +89,18 @@ jobs:
           command: docker stop -t 300 $(docker ps --filter name="dagger-engine-*" -q)
 
 workflows:
-  build:
+  build_and_test:
     jobs:
       - build
       - test
   notify:
     jobs:
-      - test
+      - test:
+          filters:
+            tags:
+              only: /.*v.*/
+            branches:
+              ignore: /.*/
       - publish_and_notify:
           requires:
             - test
