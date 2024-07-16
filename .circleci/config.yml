@@ -94,7 +94,13 @@ workflows:
       - test
   notify:
     jobs:
+      - build
+      - test:
+          requires:
+            - build
       - publish_and_notify:
+          requires:
+            - test
           filters:
             tags:
               only: /.*v.*/
