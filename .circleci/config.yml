@@ -61,32 +61,32 @@ jobs:
           command: |
             cd ${CIRCLE_TAG%/*}
             dagger publish
-      - run:
-          name: send toot
-          command: |
-            dagger -m github.com/levlaz/daggerverse/mastodon call toot \
-            --server="https://hachyderm.io" \
-            --client-id="-3UXCeKKYu3U1z2ZANnONS-Artc-WbMuMRKOuSvzuiI" \
-            --client-secret=env:MASTODON_CLIENT_SECRET \
-            --access-token=env:MASTODON_ACCESS_TOKEN \
-            --msg="I just published a new version of a #dagger module, $CIRCLE_TAG, check it out! https://daggerverse.dev/mod/github.com/levlaz/daggerverse/${CIRCLE_TAG%/*}@$CIRCLE_SHA1"
-      - run:
-          name: send tweet
-          command: |
-            dagger -m github.com/levlaz/daggerverse/twitter call tweet \
-            --bearer-token env:TWITTER_BEARER_TOKEN \
-            --consumer-key env:TWITTER_CONSUMER_KEY \
-            --consumer-secret env:TWITTER_CONSUMER_SECRET \
-            --auth-token env:TWITTER_AUTH_TOKEN \
-            --auth-secret env:TWITTER_AUTH_SECRET \
-            --text "I just published a new version of a #dagger module, $CIRCLE_TAG, check it out! https://daggerverse.dev/mod/github.com/levlaz/daggerverse/${CIRCLE_TAG%/*}@$CIRCLE_SHA1"
-      - run:
-          name: send post to bluesky
-          command: |
-            dagger -m github.com/levlaz/daggerverse/bluesky call post \
-            --email lev@levlaz.org \
-            --password env:BS_PASSWORD \
-            --text "I just published a new version of a #dagger module, $CIRCLE_TAG, check it out! https://daggerverse.dev/mod/github.com/levlaz/daggerverse/${CIRCLE_TAG%/*}@$CIRCLE_SHA1"
+      # - run:
+      #     name: send toot
+      #     command: |
+      #       dagger -m github.com/levlaz/daggerverse/mastodon call toot \
+      #       --server="https://hachyderm.io" \
+      #       --client-id="-3UXCeKKYu3U1z2ZANnONS-Artc-WbMuMRKOuSvzuiI" \
+      #       --client-secret=env:MASTODON_CLIENT_SECRET \
+      #       --access-token=env:MASTODON_ACCESS_TOKEN \
+      #       --msg="I just published a new version of a #dagger module, $CIRCLE_TAG, check it out! https://daggerverse.dev/mod/github.com/levlaz/daggerverse/${CIRCLE_TAG%/*}@$CIRCLE_SHA1"
+      # - run:
+      #     name: send tweet
+      #     command: |
+      #       dagger -m github.com/levlaz/daggerverse/twitter call tweet \
+      #       --bearer-token env:TWITTER_BEARER_TOKEN \
+      #       --consumer-key env:TWITTER_CONSUMER_KEY \
+      #       --consumer-secret env:TWITTER_CONSUMER_SECRET \
+      #       --auth-token env:TWITTER_AUTH_TOKEN \
+      #       --auth-secret env:TWITTER_AUTH_SECRET \
+      #       --text "I just published a new version of a #dagger module, $CIRCLE_TAG, check it out! https://daggerverse.dev/mod/github.com/levlaz/daggerverse/${CIRCLE_TAG%/*}@$CIRCLE_SHA1"
+      # - run:
+      #     name: send post to bluesky
+      #     command: |
+      #       dagger -m github.com/levlaz/daggerverse/bluesky call post \
+      #       --email lev@levlaz.org \
+      #       --password env:BS_PASSWORD \
+      #       --text "I just published a new version of a #dagger module, $CIRCLE_TAG, check it out! https://daggerverse.dev/mod/github.com/levlaz/daggerverse/${CIRCLE_TAG%/*}@$CIRCLE_SHA1"
       - run:
           name: Stop Dagger Engine
           command: docker stop -t 300 $(docker ps --filter name="dagger-engine-*" -q)
