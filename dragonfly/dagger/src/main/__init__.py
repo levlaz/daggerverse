@@ -3,13 +3,13 @@
 This module provides a simple way to use DragonflyDB as a part of your
 CI/CD pipeline.
 """
-
 import dagger
 from dagger import dag, function, object_type
 
 
 @object_type
 class Dragonfly:
+    """Dragonfly DB Module"""
     @function
     def serve(self) -> dagger.Service:
         """Return DragonflyDB as service.

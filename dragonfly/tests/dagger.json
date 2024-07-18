@@ -1,0 +1,12 @@
+{
+  "name": "tests",
+  "sdk": "python",
+  "dependencies": [
+    {
+      "name": "dragonfly",
+      "source": ".."
+    }
+  ],
+  "source": ".",
+  "engineVersion": "v0.12.0"
+}

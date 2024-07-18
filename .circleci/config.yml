@@ -39,6 +39,9 @@ jobs:
           name: run docusaurus tests
           command: dagger call -m docusaurus/tests all
       - run:
+          name: run dragonflydb tests
+          command: dagger call -m dragonfly/tests all
+      - run:
           name: Stop Dagger Engine
           command: docker stop -t 300 $(docker ps --filter name="dagger-engine-*" -q)
 
