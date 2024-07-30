@@ -41,12 +41,17 @@ func New(
 	// +optional
 	// +default="node-docusaurus-docs"
 	cacheVolumeName string,
+	// Optional flag to use yarn instead of npm
+	// +optional
+	// +default=false
+	yarn bool,
 ) *Docusaurus {
 	return &Docusaurus{
 		Src:             src,
 		Dir:             dir,
 		DisableCache:    disableCache,
 		CacheVolumeName: cacheVolumeName,
+		Yarn:            yarn,
 	}
 }
 
@@ -56,6 +61,7 @@ type Docusaurus struct {
 	Dir             string
 	DisableCache    bool
 	CacheVolumeName string
+	Yarn            bool
 }
 
 // Return base container for running docusaurus with docs mounted and docusaurus
@@ -80,14 +86,22 @@ func (m *Docusaurus) Base() *dagger.Container {
 			WithMountedCache(
 				"/root/.npm",
 				dag.CacheVolume("node-docusaurus-root"),
+			).
+			WithMountedCache(
+				"/root/.yarn",
+				dag.CacheVolume("node-docusaurus-root-yarn"),
 			)
 	}
 
-	ctr = ctr.
+	if m.Yarn {
+		return ctr.
+			WithExposedPort(3000).
+			WithExec([]string{"yarn"})
+	}
+
+	return ctr.
 		WithExposedPort(3000).
 		WithExec([]string{"npm", "install"})
-
-	return ctr
 }
 
 // Build production docs
