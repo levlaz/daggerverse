@@ -5,7 +5,7 @@ as a part of your Dagger pipeline. Right now it only implements the
 stats API, but in the future we may also include events.
 """
 
-import pprint
+import json
 from typing import Annotated
 
 import requests
@@ -44,4 +44,4 @@ class Plausible:
             params=payload,
             headers=headers
         )
-        return pprint.pformat(resp.json())
+        return json.dumps(resp.json(), indent=2)
