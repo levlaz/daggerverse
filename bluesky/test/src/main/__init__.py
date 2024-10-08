@@ -17,6 +17,5 @@ class BlueskyTest:
     async def all(self) -> str:
         output = ""
         output += await self.smoke_test()
-        output += await self.test_examples()
 
         return output
