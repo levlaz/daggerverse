@@ -3,10 +3,6 @@
   "sdk": "python",
   "dependencies": [
     {
-      "name": "dagger-dev",
-      "source": "github.com/dagger/dagger@2c43b425eb5faa6c820ca18141b5c6f1df2b2816"
-    },
-    {
       "name": "bluesky",
       "source": ".."
     }
