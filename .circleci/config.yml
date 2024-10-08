@@ -40,7 +40,7 @@ jobs:
           command: dagger call -m bluesky/test all
       - run:
           name: run bluesky example tests
-          command: bash bluesky/test/examples_tests.sh
+          command: bash bluesky/test/examples_test.sh
       - run:
           name: run docusaurus tests
           command: dagger call -m docusaurus/tests all
