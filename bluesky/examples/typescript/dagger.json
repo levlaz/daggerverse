@@ -1,0 +1,12 @@
+{
+  "name": "example",
+  "sdk": "typescript",
+  "dependencies": [
+    {
+      "name": "bluesky",
+      "source": "../.."
+    }
+  ],
+  "source": ".",
+  "engineVersion": "v0.13.3"
+}

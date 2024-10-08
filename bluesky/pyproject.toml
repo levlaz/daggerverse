@@ -1,0 +1,15 @@
+[project]
+name = "main"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "atproto>=0.0.54",
+    "dagger-io",
+]
+
+[tool.uv.sources]
+dagger-io = { path = "sdk", editable = true }
+
+[build-system]
+requires = ["hatchling==1.25.0"]
+build-backend = "hatchling.build"
