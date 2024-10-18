@@ -1,6 +1,5 @@
 {
   "name": "bluesky",
-  "sdk": "python",
-  "source": ".",
-  "engineVersion": "v0.13.3"
+  "sdk": "typescript",
+  "engineVersion": "v0.13.5"
 }
