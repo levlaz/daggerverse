@@ -7,6 +7,9 @@ import { dag, Container, Directory, object, func, Secret } from "@dagger.io/dagg
 import {AtpAgent, RichText} from "@atproto/api"
 
 @object()
+/**
+ * Bluesky Dagger Module
+ */
 class Bluesky {
   /**
    * Send post to Bluesky
