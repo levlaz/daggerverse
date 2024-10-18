@@ -36,6 +36,12 @@ jobs:
           name: Install Dagger CLI
           command: cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sudo sh; cd -; }
       - run:
+          name: run bluesky tests
+          command: dagger call -m bluesky/test all
+      - run:
+          name: run bluesky example tests
+          command: bash bluesky/test/examples_test.sh
+      - run:
           name: run docusaurus tests
           command: dagger call -m docusaurus/tests all
       - run:
