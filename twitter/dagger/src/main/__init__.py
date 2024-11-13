@@ -1,4 +1,7 @@
-"""Send Tweets from your Dagger Pipeline"""
+"""Send Tweets from your Dagger Pipeline
+
+WARNING: this module is no longer maintained
+"""
 
 import sys
 import tweepy
@@ -28,6 +31,7 @@ class Twitter:
         getting this to actually work with auth is a huge PITA, but this comment 
         saves us:https://github.com/Significant-Gravitas/AutoGPT/issues/2194#issuecomment-1513626102 
         """
+        print("WARNING: this module is no longer maintained")
         client = tweepy.Client(bearer_token = await bearer_token.plaintext(),
                                consumer_key = await consumer_key.plaintext(),
                                consumer_secret = await consumer_secret.plaintext(),

@@ -21,7 +21,6 @@ These modules are actively being used and serve a real purpose.
 | novu         | Novu multi-channel messaging API wrapper        |
 | openring     | Generate html snippets from blogs you follow    |
 | plausible    | Interact with Plausible Analytics API           |
-| twitter      | Interact with Twitter API                       |
 
 ## In Development Modules 
 
@@ -45,3 +44,4 @@ option exists in a self-serve way in Daggerverse.
 | Module      | Description                                    |
 | :---------- | :--------------------------------------------- |
 | cloud-utils | helper functions for working with dagger cloud |
+| twitter     | Interact with Twitter API                      |
