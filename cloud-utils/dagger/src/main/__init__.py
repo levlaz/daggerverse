@@ -1,4 +1,6 @@
 """Collection of Useful Utilities for working with Dagger Cloud
+
+WARNING: this module is no longer maintained
 """
 
 import dagger
@@ -14,6 +16,7 @@ class CloudUtils:
         self
     ) -> str:
         """Parse Environment Variables and Return Dagger Cloud Trace URL"""
+        print("WARNING: this module is no longer maintained")
         full = os.getenv("TRACEPARENT")
         # TODO this is a magic number, is it always guaranteed to be this?
         if full is not None:
