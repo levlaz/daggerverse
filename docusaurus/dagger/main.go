@@ -93,21 +93,15 @@ func (m *Docusaurus) Base() *dagger.Container {
 			)
 	}
 
-	if m.Yarn {
-		return ctr.
-			WithExposedPort(3000).
-			WithExec([]string{"yarn"})
-	}
-
 	return ctr.
 		WithExposedPort(3000).
-		WithExec([]string{"npm", "install"})
+		WithExec([]string{m.packageManager(), "install"})
 }
 
 // Build production docs
 func (m *Docusaurus) Build() *dagger.Directory {
 	return m.Base().
-		WithExec([]string{"npm", "run", "build"}).
+		WithExec([]string{m.packageManager(), "run", "build"}).
 		// copying build to a temp directory because
 		// cache volumes cannot be exported. This is totally
 		// worth vs the time it takes to build on a cold cache
@@ -119,14 +113,21 @@ func (m *Docusaurus) Build() *dagger.Directory {
 // Serve production docs locally as a service
 func (m *Docusaurus) Serve() *dagger.Service {
 	return m.Base().
-		WithExec([]string{"npm", "run", "build"}).
-		WithExec([]string{"npm", "run", "serve", "--build"}).
+		WithExec([]string{m.packageManager(), "run", "build"}).
+		WithExec([]string{m.packageManager(), "run", "serve", "--build"}).
 		AsService()
 }
 
 // Build and serve development docs as a service
 func (m *Docusaurus) ServeDev() *dagger.Service {
 	return m.Base().
-		WithExec([]string{"npm", "start", "--", "--host", "0.0.0.0"}).
+		WithExec([]string{m.packageManager(), "start", "--", "--host", "0.0.0.0"}).
 		AsService()
+}
+
+func (m *Docusaurus) packageManager() string {
+	if m.Yarn {
+		return "yarn"
+	}
+	return "npm"
 }
