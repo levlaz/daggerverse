@@ -29,6 +29,9 @@ export class Wrangler {
     this.branch = branch ?? "main"
   }
 
+  /**
+   * Base Container with Node and Wrangler installed
+   */
   @func()
   async base(): Promise<Container> {
     return dag
@@ -38,6 +41,12 @@ export class Wrangler {
       .withExec(["npm", "install", "-g", "wrangler"])
   }
 
+  /**
+   * Deploy the project to Cloudflare
+   * 
+   * note: project must already exist. There is no way to create a new project 
+   * non-interactively using Wrangler.
+   */
   @func()
   async deploy(): Promise<string> {
     const container = await this.base()
@@ -45,7 +54,7 @@ export class Wrangler {
     return container
       .withMountedDirectory("/src", this.projectDir)
       .withWorkdir("/src")
-      .withExec(["wrangler deploy --project", this.projectName, "--branch", this.branch])
+      .withExec(["wrangler", "deploy", "--project-name", this.projectName, "--branch", this.branch, "."])
       .stdout()
   }
 }
