@@ -1,0 +1,5 @@
+{
+  "name": "wrangler",
+  "engineVersion": "v0.15.1",
+  "sdk": "typescript"
+}
