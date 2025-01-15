@@ -54,7 +54,7 @@ export class Wrangler {
     return container
       .withMountedDirectory("/src", this.projectDir)
       .withWorkdir("/src")
-      .withExec(["wrangler", "deploy", "--project-name", this.projectName, "--branch", this.branch, "."])
+      .withExec(["wrangler", "pages", "deploy", "--project-name", this.projectName, "--branch", this.branch, "."])
       .stdout()
   }
 }
