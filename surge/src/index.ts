@@ -5,6 +5,24 @@ import { dag, Container, Directory, Secret, object, func } from "@dagger.io/dagg
 
 @object()
 export class Surge {
+  login: string
+  token: Secret
+  domain: string
+  project: Directory
+
+  /**
+   * @param login - surge.sh login
+   * @param token - surge.sh auth token
+   * @param domain - domain to publish to
+   * @param project - project directory with the files to publish
+   */
+  constructor(login?: string, token?: Secret, domain?: string, project?: Directory) {
+    this.login = login
+    this.token = token
+    this.domain = domain
+    this.project = project
+  }
+
   /**
    * Return base image with surge installed
    */
@@ -26,18 +44,14 @@ export class Surge {
 
   /**
    * Publish directory to surge.sh
-   * 
-   * @param login - surge.sh login
-   * @param token - surge.sh auth token
-   * @param project - project directory with the files to publish
    */
   @func()
-  publish(login: string, token: Secret, domain: string, project: Directory): Container {
+  publish(): Container {
     return this.base()
-      .withEnvVariable("SURGE_LOGIN", login)
-      .withSecretVariable("SURGE_TOKEN", token)
-      .withDirectory("/src", project)
+      .withEnvVariable("SURGE_LOGIN", this.login)
+      .withSecretVariable("SURGE_TOKEN", this.token)
+      .withDirectory("/src", this.project)
       .withWorkdir("/src")
-      .withExec(["surge", "--project", "/src", "--domain", `${domain}.surge.sh`])
+      .withExec(["surge", "--project", "/src", "--domain", `${this.domain}.surge.sh`])
   }
 }
