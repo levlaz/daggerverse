@@ -1,0 +1,7 @@
+{
+  "name": "surge",
+  "engineVersion": "v0.17.2",
+  "sdk": {
+    "source": "typescript"
+  }
+}
