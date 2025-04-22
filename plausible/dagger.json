@@ -1,6 +1,8 @@
 {
   "name": "plausible",
-  "sdk": "python",
-  "source": "dagger",
-  "engineVersion": "v0.13.0"
+  "engineVersion": "v0.18.4",
+  "sdk": {
+    "source": "python"
+  },
+  "source": "dagger"
 }
