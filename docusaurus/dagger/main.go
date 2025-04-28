@@ -22,6 +22,7 @@ package main
 import (
 	"dagger/docusaurus/internal/dagger"
 	"fmt"
+	"path/filepath"
 )
 
 func New(
@@ -29,7 +30,7 @@ func New(
 	src *dagger.Directory,
 	// Optional working directory if you need to execute docusaurus commands outside of your root
 	// +optional
-	// +default="/src"
+	// +default="."
 	dir string,
 	// Optional flag to disable cache
 	// +optional
@@ -71,7 +72,7 @@ func (m *Docusaurus) Base() *dagger.Container {
 		From("node:lts-alpine").
 		WithoutEntrypoint().
 		WithMountedDirectory("/src", m.Src).
-		WithWorkdir(m.Dir)
+		WithWorkdir(filepath.Join("/src", m.Dir))
 
 	if !m.DisableCache {
 		ctr = ctr.
