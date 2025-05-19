@@ -78,6 +78,9 @@ func (m *Docusaurus) Base() *dagger.Container {
 			WithMountedCache(
 				fmt.Sprintf("%s/build", m.Dir),
 				dag.CacheVolume(m.CacheVolumeName+"-build"),
+				dagger.ContainerWithMountedCacheOpts{
+					Sharing: dagger.CacheSharingModePrivate,
+				},
 			).
 			WithMountedCache(
 				"/root/.npm",
