@@ -76,10 +76,6 @@ func (m *Docusaurus) Base() *dagger.Container {
 	if !m.DisableCache {
 		ctr = ctr.
 			WithMountedCache(
-				fmt.Sprintf("%s/node_modules", m.Dir),
-				dag.CacheVolume(m.CacheVolumeName),
-			).
-			WithMountedCache(
 				fmt.Sprintf("%s/build", m.Dir),
 				dag.CacheVolume(m.CacheVolumeName+"-build"),
 			).
