@@ -29,7 +29,7 @@ func (m *Tests) Basic(ctx context.Context) error {
 	site := dag.
 		Docusaurus(
 			dir,
-			dagger.DocusaurusOpts{Dir: "/src/docs", DisableCache: true},
+			dagger.DocusaurusOpts{Dir: "/docs", DisableCache: true},
 		).
 		Build()
 
