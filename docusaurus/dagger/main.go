@@ -21,7 +21,6 @@ package main
 
 import (
 	"dagger/docusaurus/internal/dagger"
-	"fmt"
 	"path/filepath"
 )
 
@@ -77,37 +76,32 @@ func (m *Docusaurus) Base() *dagger.Container {
 	if !m.DisableCache {
 		ctr = ctr.
 			WithMountedCache(
-				fmt.Sprintf("%s/build", m.Dir),
-				dag.CacheVolume(m.CacheVolumeName+"-build"),
+				"./node_modules/.cache",
+				dag.CacheVolume(m.CacheVolumeName+"-cache"),
 				dagger.ContainerWithMountedCacheOpts{
 					Sharing: dagger.CacheSharingModePrivate,
 				},
 			).
 			WithMountedCache(
-				"/root/.npm",
-				dag.CacheVolume("node-docusaurus-root"),
+				"/root/.npm/_cacache",
+				dag.CacheVolume("npm-cache"),
 			).
 			WithMountedCache(
-				"/root/.yarn",
-				dag.CacheVolume("node-docusaurus-root-yarn"),
+				"/usr/local/share/.cache/yarn",
+				dag.CacheVolume("yarn-cache"),
 			)
 	}
 
 	return ctr.
 		WithExposedPort(3000).
-		WithExec([]string{m.packageManager(), "install"})
+		With(m.packageManagerInstall)
 }
 
 // Build production docs
 func (m *Docusaurus) Build() *dagger.Directory {
 	return m.Base().
 		WithExec([]string{m.packageManager(), "run", "build"}).
-		// copying build to a temp directory because
-		// cache volumes cannot be exported. This is totally
-		// worth vs the time it takes to build on a cold cache
-		WithMountedDirectory("/tmp/build", dag.Directory()).
-		WithExec([]string{"cp", "-r", "build/.", "/tmp/build"}).
-		Directory("/tmp/build")
+		Directory("build")
 }
 
 // Serve production docs locally as a service
@@ -130,4 +124,11 @@ func (m *Docusaurus) packageManager() string {
 		return "yarn"
 	}
 	return "npm"
+}
+
+func (m *Docusaurus) packageManagerInstall(ctr *dagger.Container) *dagger.Container {
+	if m.Yarn {
+		return ctr.WithExec([]string{"yarn", "install", "--frozen-lockfile"})
+	}
+	return ctr.WithExec([]string{"npm", "ci"})
 }
