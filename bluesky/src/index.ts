@@ -1,7 +1,7 @@
 /**
  * Bluesky Dagger Module
  *
- * Send posts to Bluesky from your Dagger pipelines
+ * Send posts to Bluesky from your Dagger pipelines. Can connect to any Bluesky instance but defaults to the public instance at https://bsky.social.
  */
 import {
   dag,
@@ -21,12 +21,17 @@ import { chunkAndPost, chunkText } from '@/lib/bluesky-chunker';
 export class Bluesky {
   /**
    * Send post to Bluesky, if longer than 300 characters, it will be chunked into multiple posts.
+   * @returns JSON string of posts
    */
   @func()
   async post(
+    // Email address of the Bluesky account
     email: string,
+    // Password of the Bluesky account, should be a Dagger Secret
     password: Secret,
+    // Content to post on Bluesky
     text: string,
+    // Host of the Bluesky instance, defaults to the public instance
     host = "https://bsky.social",
   ): Promise<string> {
     const agent = new AtpAgent({ service: host });
