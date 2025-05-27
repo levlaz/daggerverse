@@ -12,6 +12,7 @@ import {
   Secret,
 } from "@dagger.io/dagger";
 import { AtpAgent, RichText } from "@atproto/api";
+import { chunkAndPost, chunkText } from '@/lib/bluesky-chunker';
 
 @object()
 /**
@@ -19,7 +20,7 @@ import { AtpAgent, RichText } from "@atproto/api";
  */
 export class Bluesky {
   /**
-   * Send post to Bluesky
+   * Send post to Bluesky, if longer than 300 characters, it will be chunked into multiple posts.
    */
   @func()
   async post(
@@ -36,15 +37,12 @@ export class Bluesky {
     });
 
     const rt = new RichText({ text });
-    await rt.detectFacets(agent);
-    const postRecord = {
-      $type: "app.bsky.feed.post",
-      text: rt.text,
-      facets: rt.facets,
-      createdAt: new Date().toISOString(),
-    };
+    await rt.detectFacets();
+    const richChunks = chunkText(rt);
 
-    const { uri } = await agent.post(postRecord);
-    return uri;
+
+    const posts  = await chunkAndPost(agent, rt)
+
+    return JSON.stringify(posts, null, 2)
   }
 }

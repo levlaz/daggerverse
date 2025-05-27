@@ -9,7 +9,8 @@
       ],
       "@dagger.io/dagger/telemetry": [
         "./sdk/src/telemetry"
-      ]
+      ],
+      "@/*": ["./src/*"]
     }
   }
 }
