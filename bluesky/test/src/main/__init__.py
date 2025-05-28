@@ -19,6 +19,22 @@ class BlueskyTest:
         output += await self.smoke_test()
 
         return output
+    
+    @function
+    async def unit(
+        self, 
+        source: Annotated[dagger.Directory, DefaultPath("/")],
+    ) -> str:
+        return await (
+            dag.
+            container().
+            from_("node").
+            with_mounted_directory("/src", source).
+            with_workdir("/src/bluesky").
+            with_exec(["yarn", "install"]).
+            with_exec(["yarn", "test:custom"]).
+            stdout()
+        )
 
     @function
     async def text_examples(self, source: dagger.Directory) -> str:

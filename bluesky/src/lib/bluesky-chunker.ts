@@ -49,7 +49,8 @@ const BREAK_POINT_PRIORITY = {
  */
 export function chunkText(
   input: RichText | string,
-  options: ChunkOptions = {}
+  options: ChunkOptions = {},
+  agent?: any // Optional agent for detectFacets
 ): PostChunk[] {
   const {
     maxLength = DEFAULT_BLUESKY_CHAR_LIMIT,
@@ -61,8 +62,8 @@ export function chunkText(
   const richText = typeof input === 'string' ? new RichText({ text: input }) : input;
   
   // Detect facets (mentions, links, etc.)
-  if (typeof input === 'string') {
-    richText.detectFacets();
+  if (typeof input === 'string' && agent) {
+    richText.detectFacets(agent);
   }
 
   // Check if the text fits in one post (accounting for byte length)
@@ -204,23 +205,18 @@ function findOptimalSplitPointForRichText(
   
   while (splitIndex > startPos) {
     const char = text[splitIndex - 1];
-    
-    if (BREAK_POINT_PRIORITY.WHITESPACE.includes(char)) {
+    if ((BREAK_POINT_PRIORITY.WHITESPACE as readonly string[]).includes(char)) {
       return splitIndex;
     }
-    
-    if (BREAK_POINT_PRIORITY.SENTENCE_END.includes(char)) {
+    if ((BREAK_POINT_PRIORITY.SENTENCE_END as readonly string[]).includes(char)) {
       return splitIndex;
     }
-    
-    if (BREAK_POINT_PRIORITY.CLAUSE_BREAK.includes(char)) {
+    if ((BREAK_POINT_PRIORITY.CLAUSE_BREAK as readonly string[]).includes(char)) {
       return splitIndex;
     }
-    
-    if (BREAK_POINT_PRIORITY.CLOSING_BRACKETS.includes(char)) {
+    if ((BREAK_POINT_PRIORITY.CLOSING_BRACKETS as readonly string[]).includes(char)) {
       return splitIndex;
     }
-    
     splitIndex--;
   }
 
@@ -261,29 +257,21 @@ function addThreadNumbersToChunks(
   
   return chunks.map((chunk, index) => {
     const threadNumber = threadNumberFormat(index + 1, totalChunks);
-    
     // Create new RichText with thread number appended
     const newText = chunk.text + threadNumber;
-    const newRichText = new RichText({ 
-      text: newText,
-      facets: chunk.facets 
-    });
-    
-    // Handle overflow by truncating if necessary
+    let newRichText: RichText;
     if (getTextByteLength(newText) > maxLength) {
       const availableBytes = maxLength - getTextByteLength(threadNumber);
       const truncatedText = truncateTextToByteLength(chunk.text, availableBytes);
       const finalText = truncatedText + threadNumber;
-      
       // Adjust facets for truncated text
       const truncatedFacets = chunk.facets?.filter(facet => 
         facet.index.byteEnd <= getTextByteLength(truncatedText)
       ) || [];
-      
-      newRichText.text = finalText;
-      newRichText.facets = truncatedFacets;
+      newRichText = new RichText({ text: finalText, facets: truncatedFacets });
+    } else {
+      newRichText = new RichText({ text: newText, facets: chunk.facets });
     }
-
     return createPostChunk(newRichText, index, totalChunks);
   });
 }
