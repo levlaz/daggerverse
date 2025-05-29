@@ -41,9 +41,9 @@ jobs:
       # - run:
       #     name: run bluesky example tests
       #     command: bash bluesky/test/examples_test.sh
-      # - run:
-      #     name: run docusaurus tests
-      #     command: dagger call -m docusaurus/tests all
+      - run:
+          name: run docusaurus tests
+          command: dagger call -m docusaurus/tests all
       - run:
           name: run dragonflydb tests
           command: dagger call -m dragonfly/tests all
