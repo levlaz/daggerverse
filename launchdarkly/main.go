@@ -3,15 +3,16 @@ package main
 import (
 	"context"
 	"fmt"
+	"launchdarkly/internal/dagger"
 )
 
 type Launchdarkly struct {
 	// LaunchDarkly Container version (default: latest)
 	LaunchdarklyVersion string
 	// LaunchDarkly token
-	Token *Secret
+	Token *dagger.Secret
 	// LaunchDarkly directory to scan (dir)
-	Directory *Directory
+	Directory *dagger.Directory
 	// LaunchDarkly project id (projKey)
 	Project string
 	// LaunchDarkly repo name (repoName)
@@ -21,18 +22,20 @@ type Launchdarkly struct {
 // example usage: "dagger call find --token $LD_ACCESS_TOKEN --project $LD_PROJ_KEY --repo $LD_REPO_NAME --directory ."
 func (m *Launchdarkly) Find(ctx context.Context,
 	// LaunchDarkly Container version (default: latest)
-	launchdarklyVersion Optional[string],
+	// +optional
+	// +default="latest"
+	launchdarklyVersion string,
 	// LaunchDarkly token
-	token *Secret,
+	token *dagger.Secret,
 	// LaunchDarkly directory to scan
-	directory *Directory,
+	directory *dagger.Directory,
 	// LaunchDarkly project id
 	project string,
 	// LaunchDarkly repo name
 	repo string,
 ) (string, error) {
 	ld := &Launchdarkly{
-		LaunchdarklyVersion: launchdarklyVersion.GetOr("latest"),
+		LaunchdarklyVersion: launchdarklyVersion,
 		Token:               token,
 		Project:             project,
 		Repo:                repo,
@@ -54,6 +57,6 @@ func find(ctx context.Context, ld *Launchdarkly) (string, error) {
 		WithWorkdir("/mnt")
 
 	return container.
-		WithExec(args, ContainerWithExecOpts{SkipEntrypoint: true}).
+		WithExec(args, dagger.ContainerWithExecOpts{UseEntrypoint: false}).
 		Stdout(ctx)
 }
