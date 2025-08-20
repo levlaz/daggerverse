@@ -6,6 +6,7 @@ package main
 
 import (
 	"context"
+	"dagger/mastodon/internal/dagger"
 	"log"
 
 	"github.com/mattn/go-mastodon"
@@ -23,9 +24,9 @@ func (m *Mastodon) Toot(
 	// mastodon application client id
 	clientId string,
 	// mastodon application client secret
-	clientSecret *Secret,
+	clientSecret *dagger.Secret,
 	// mastodon access token
-	accessToken *Secret,
+	accessToken *dagger.Secret,
 	// toot body
 	msg string,
 	// toot visibility, one of public, unlisted, private, direct
