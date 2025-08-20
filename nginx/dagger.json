@@ -1,4 +1,7 @@
 {
   "name": "nginx",
-  "sdk": "go"
+  "engineVersion": "v0.18.16",
+  "sdk": {
+    "source": "go"
+  }
 }
