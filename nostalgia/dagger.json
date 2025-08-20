@@ -1,6 +1,8 @@
 {
   "name": "nostalgia",
-  "sdk": "python",
-  "source": "dagger",
-  "engineVersion": "v0.11.6"
+  "engineVersion": "v0.18.16",
+  "sdk": {
+    "source": "python"
+  },
+  "source": "dagger"
 }
