@@ -5,10 +5,12 @@
 
 package main
 
+import "dagger/openring/internal/dagger"
+
 type Openring struct{}
 
 // return base image with openring
-func (m *Openring) base() *Container {
+func (m *Openring) base() *dagger.Container {
 	return dag.
 		Container().
 		From("golang:1.22-alpine").
@@ -25,11 +27,11 @@ func (m *Openring) base() *Container {
 // generate openring snippet
 func (m *Openring) Openring(
 	// File containing list of feeds to include
-	sources *File,
+	sources *dagger.File,
 	// Optional HTML template file
 	// +optional
-	template *File,
-) *File {
+	template *dagger.File,
+) *dagger.File {
 	if template != nil {
 		return m.base().
 			WithFile("sources.txt", sources).
@@ -45,7 +47,7 @@ func (m *Openring) Openring(
 }
 
 // Test for Openring Function
-func (m *Openring) Test(sources *File) *File {
+func (m *Openring) Test(sources *dagger.File) *dagger.File {
 	template := dag.Git("https://git.sr.ht/~levlaz/openring").
 		Branch("master").
 		Tree().
