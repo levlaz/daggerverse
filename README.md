@@ -22,18 +22,13 @@ These modules are actively being used and serve a real purpose.
 | openring     | Generate html snippets from blogs you follow    |
 | plausible    | Interact with Plausible Analytics API           |
 
-## In Development Modules 
+## Work in Progress Modules 
 
-These modules are a work in progress. 
+These modules are under development
 
-| Module   | Description                            |
-| :------- | :------------------------------------- |
-| dgvs     | Interact with Daggerverse              |
-| get-ip   | Returns IP address of running function |
-| opentofu | OpenTofu CLI wrapper                   |
-| tutor    | Interactive Dagger Tutorial            |
-| vapor    | Vapor CLI wrapper                      |
-
+| Module      | Description                                    |
+| :---------- | :--------------------------------------------- |
+| evolution   | dev env for developing evolution plugins       |
 
 ## Deprecated Modules 
 
@@ -45,3 +40,8 @@ option exists in a self-serve way in Daggerverse.
 | :---------- | :--------------------------------------------- |
 | cloud-utils | helper functions for working with dagger cloud |
 | twitter     | Interact with Twitter API                      |
+| dgvs        | Interact with Daggerverse                      |
+| get-ip      | Returns IP address of running function         |
+| opentofu    | OpenTofu CLI wrapper                           |
+| tutor       | Interactive Dagger Tutorial                    |
+| vapor       | Vapor CLI wrapper                              |
