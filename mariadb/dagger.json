@@ -1,6 +1,7 @@
 {
   "name": "mariadb",
-  "sdk": "go",
-  "source": ".",
-  "engineVersion": "v0.11.9"
+  "engineVersion": "v0.18.16",
+  "sdk": {
+    "source": "go"
+  }
 }

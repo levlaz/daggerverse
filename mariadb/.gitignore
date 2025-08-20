@@ -4,3 +4,4 @@
 /internal
 /internal/dagger
 /internal/telemetry
+/.env

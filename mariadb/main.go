@@ -7,6 +7,7 @@ package main
 
 import (
 	"fmt"
+	"mariadb/internal/dagger"
 )
 
 type Mariadb struct {
@@ -41,7 +42,7 @@ func New(
 }
 
 // Return MariaDB Container
-func (m *Mariadb) Base() *Container {
+func (m *Mariadb) Base() *dagger.Container {
 	return dag.Container().
 		From(fmt.Sprintf("mariadb:%s", m.Version)).
 		WithEnvVariable("MARIADB_ALLOW_EMPTY_ROOT_PASSWORD", "1").
@@ -56,7 +57,7 @@ func (m *Mariadb) Base() *Container {
 //
 // if you'd like to run on a different port then:
 // dagger call serve up --ports=3308:3306
-func (m *Mariadb) Serve() *Service {
+func (m *Mariadb) Serve() *dagger.Service {
 	return m.Base().AsService()
 }
 
@@ -69,7 +70,7 @@ func (m *Mariadb) Serve() *Service {
 // mariadb container with `mariadb -h db` and see the sample database
 // with `use sample-datbase`, you  may need to add `--skip-ssl` if the mariadb
 // client complains about ERROR 2026 (HY000): TLS/SSL error: self-signed certificate
-func (m *Mariadb) Debug() *Container {
+func (m *Mariadb) Debug() *dagger.Container {
 	return dag.Container().
 		From("mariadb:latest").
 		WithServiceBinding("db", m.Serve())
