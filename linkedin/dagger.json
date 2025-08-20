@@ -1,6 +1,8 @@
 {
   "name": "linkedin",
-  "sdk": "typescript",
-  "source": "dagger",
-  "engineVersion": "v0.11.1"
+  "engineVersion": "v0.18.16",
+  "sdk": {
+    "source": "typescript"
+  },
+  "source": "dagger"
 }

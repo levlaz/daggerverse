@@ -5,5 +5,6 @@
   },
   "devDependencies": {
     "@dagger.io/dagger": "./sdk"
-  }
+  },
+  "type": "module"
 }
