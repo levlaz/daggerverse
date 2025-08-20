@@ -1,6 +1,8 @@
 {
   "name": "containerd",
-  "sdk": "go",
-  "source": "dagger",
-  "engineVersion": "v0.12.0"
+  "engineVersion": "v0.18.16",
+  "sdk": {
+    "source": "go"
+  },
+  "source": "dagger"
 }
