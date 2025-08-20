@@ -1,5 +1,7 @@
 {
   "name": "evolution",
-  "sdk": "python",
-  "engineVersion": "v0.13.3"
+  "engineVersion": "v0.18.16",
+  "sdk": {
+    "source": "python"
+  }
 }
