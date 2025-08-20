@@ -8,6 +8,7 @@ package main
 
 import (
 	"context"
+	"dagger/novu/internal/dagger"
 	"fmt"
 
 	novu "github.com/novuhq/go-novu/lib"
@@ -20,7 +21,7 @@ func (m *Novu) Notify(
 	// Novu subscriber ID
 	subscriber string,
 	// Novu API token
-	token *Secret,
+	token *dagger.Secret,
 	// Novu event Id
 	event string,
 	// Message body for notification
