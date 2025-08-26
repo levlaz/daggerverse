@@ -1,4 +1,4 @@
-// MariaDB Module
+// Module
 //
 // This module allows you to easily add MariaDB as a service
 // to your pipeline.
@@ -70,7 +70,7 @@ func (m *Mariadb) Serve() *dagger.Service {
 // mariadb container with `mariadb -h db` and see the sample database
 // with `use sample-datbase`, you  may need to add `--skip-ssl` if the mariadb
 // client complains about ERROR 2026 (HY000): TLS/SSL error: self-signed certificate
-func (m *Mariadb) Debug() *dagger.Container {
+func (m *Mariadb) Debug(level string) *dagger.Container {
 	return dag.Container().
 		From("mariadb:latest").
 		WithServiceBinding("db", m.Serve())
